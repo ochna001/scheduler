@@ -1,0 +1,92 @@
+code,name,program,year,semester,lec_hours,lab_hours,room_category
+IT 100,Introduction to Computing,IT,1,1,2,1,lab
+IT 101,Computer Programming 1,IT,1,1,2,1,lab
+GEC 1,Understanding the Self,IT,1,1,3,0,non-lab
+GEC 2,Readings in Philippine History,IT,1,1,3,0,non-lab
+GEC 3,Mathematics in the Modern World,IT,1,1,3,0,non-lab
+PathFit 1,Movement of Competency Training,IT,1,1,2,0,non-lab
+NSTP 1,CWTS/LTS/ROTC 1,IT,1,1,3,0,non-lab
+IT 102,Computer Programming 2,IT,1,2,2,1,lab
+IT 103,Data Structures and Algorithms,IT,1,2,2,1,lab
+IT 104,Discrete Mathematics,IT,1,2,3,0,non-lab
+GEC 4,Purposive Communication,IT,1,2,3,0,non-lab
+GEC 5,Art Appreciation,IT,1,2,3,0,non-lab
+GE Elec 1,Environmental Science,IT,1,2,3,0,non-lab
+PathFit 2,Exercise-based Fitness Activities,IT,1,2,2,0,non-lab
+NSTP 2,CWTS/LTS/ROTC 2,IT,1,2,3,0,non-lab
+IT 105,Applications Development and Emerging Technologies,IT,2,1,2,1,lab
+IT 106,Information Management,IT,2,1,3,0,non-lab
+IT 107,Introduction to Human Computer Interaction,IT,2,1,2,1,lab
+IT 108,Operating Systems,IT,2,1,2,1,lab
+GEC 6,"Science, Technology and Society",IT,2,1,3,0,non-lab
+GE Elec 2,Etika,IT,2,1,3,0,non-lab
+GE Elec 3,The Entrepreneurial Mind,IT,2,1,3,0,non-lab
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",IT,2,1,2,0,non-lab
+IT 109,Fundamentals of Database Systems,IT,2,2,2,1,lab
+IT 110,Computer Architecture and Robotics,IT,2,2,2,1,lab
+IT 111,Integrative Programming and Technologies 1,IT,2,2,2,1,lab
+IT 112,Mobile Applications,IT,2,2,2,1,lab
+IT 113,Information Assurance and Security 1,IT,2,2,3,0,non-lab
+GEC 7,Contemporary World,IT,2,2,3,0,non-lab
+GE Elec 4,Reading Visual Art,IT,2,2,3,0,non-lab
+PathFit 4,"Menu of Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",IT,2,2,2,0,non-lab
+IT 114,Quantitative Methods (Modeling and Simulation),IT,3,1,2,1,lab
+IT 115,Networking 1,IT,3,1,2,1,lab
+IT 116,Systems Analysis and Design,IT,3,1,2,1,lab
+IT 117,Systems Administration and Maintenance,IT,3,1,2,1,lab
+IT 118,Internet of Things,IT,3,1,3,0,non-lab
+IT 119,Data Scalability and Analytics,IT,3,1,3,0,non-lab
+GEC 9,Ang Buhay at mga Akda ni Rizal,IT,3,1,3,0,non-lab
+IT 120,Networking 2,IT,3,2,2,1,lab
+IT 121,Capstone Project and Research 1,IT,3,2,2,1,lab
+IT 122,Systems Integration and Architecture,IT,3,2,3,0,non-lab
+IT 123,Information Assurance and Security 2,IT,3,2,3,0,non-lab
+ITELECT 001,IT Elective 1*,IT,3,2,3,0,non-lab
+ITELECT 002,IT Elective 2*,IT,3,2,2,1,lab
+IT 124,Social and Professional Issues in Computing,IT,4,1,3,0,non-lab
+IT 125,Capstone Project and Research 2,IT,4,1,2,1,lab
+IT 126,Cyber Security Principle,IT,4,1,3,0,non-lab
+IT 127,Global Professional Practice,IT,4,1,3,0,non-lab
+ITELECT 003,IT Elective 3*,IT,4,1,2,1,lab
+ITELECT 004,IT Elective 4*,IT,4,1,3,0,non-lab
+IT 128,Practicum for Information Technology,IT,4,2,6,486,lab
+IS 100,Fundamentals of Information Systems,IS,1,1,2,1,lab
+IS 101,Business Process Management,IS,1,1,3,0,non-lab
+GEC 1,Understanding the Self,IS,1,1,3,0,non-lab
+GEC 2,Readings in Philippine History,IS,1,1,3,0,non-lab
+GEC 3,Mathematics in the Modern World,IS,1,1,3,0,non-lab
+PathFit 1,Movement of Competency Training,IS,1,1,2,0,non-lab
+NSTP 1,CWTS/LTS/ROTC 1,IS,1,1,3,0,non-lab
+IS 102,Professional Development and Communication,IS,1,2,3,0,non-lab
+IS 103,IT Infrastructure and Network Technologies,IS,1,2,2,1,lab
+GEC 4,Purposive Communication,IS,1,2,3,0,non-lab
+GEC 5,Art Appreciation,IS,1,2,3,0,non-lab
+GE Elec 1,Environmental Science,IS,1,2,3,0,non-lab
+PathFit 2,Exercise-based Fitness Activities,IS,1,2,2,0,non-lab
+NSTP 2,CWTS/LTS/ROTC 2,IS,1,2,3,0,non-lab
+IS 201,Enterprise Architecture,IS,2,1,2,1,lab
+IS 202,Data and Information Management,IS,2,1,2,1,lab
+IS 203,Financial Management,IS,2,1,3,0,non-lab
+GEC 6,"Science, Technology and Society",IS,2,1,3,0,non-lab
+GE Elec 2,Etika,IS,2,1,3,0,non-lab
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",IS,2,1,2,0,non-lab
+IS 204,Business Intelligence,IS,2,2,2,1,lab
+IS 205,IT Audit and Controls,IS,2,2,3,0,non-lab
+IS 206,Accounting and Financial Systems,IS,2,2,2,1,lab
+GEC 7,Contemporary World,IS,2,2,3,0,non-lab
+GE Elec 4,Reading Visual Art,IS,2,2,3,0,non-lab
+PathFit 4,"Menu of Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",IS,2,2,2,0,non-lab
+IS 301,Project Management and Quality Assurance,IS,3,1,2,1,lab
+IS 302,"IS Strategy, Management and Acquisition",IS,3,1,3,0,non-lab
+IS 303,Enterprise Resource Planning Systems,IS,3,1,2,1,lab
+GEC 9,Ang Buhay at mga Akda ni Rizal,IS,3,1,3,0,non-lab
+ISELECT 001,IS Elective 1 (Analytics),IS,3,1,2,1,lab
+IS 304,IS Project 1,IS,3,2,2,1,lab
+IS 305,Evaluation of Business Performance,IS,3,2,3,0,non-lab
+ISELECT 002,IS Elective 2 (E-Commerce),IS,3,2,2,1,lab
+ISELECT 003,IS Elective 3 (Security),IS,3,2,3,0,non-lab
+IS 401,IS Project 2,IS,4,1,2,1,lab
+IS 402,IS Implementation and Maintenance,IS,4,1,3,0,non-lab
+IS 403,Social and Professional Issues in IS,IS,4,1,3,0,non-lab
+ISELECT 004,IS Elective 4 (Management),IS,4,1,2,1,lab
+IS 404,Practicum for Information Systems,IS,4,2,6,486,lab

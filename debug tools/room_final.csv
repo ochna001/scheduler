@@ -1,0 +1,18 @@
+room_id,building,floor,capacity,room_type,equipment,room_category
+NB-101,New,1,50,networking,Cisco routers switches network analyzers,lab
+NB-102,New,1,45,database,SQL Oracle MySQL analytics tools - also multimedia,lab
+NB-103,New,1,40,programming,IDEs compilers dev tools,lab
+NB-201,New,2,50,systems,VMs Linux Windows Server virtualization - also security,lab
+NB-202,New,2,45,systems,Multipurpose security and programming lab,lab
+NB-203,New,2,40,mobile_dev,Android Studio iOS simulators - also web dev,lab
+NB-301,New,3,50,networking,Web servers React Node.js can handle networking,lab
+NB-302,New,3,45,database,PCs with Adobe Suite can run code,lab
+NB-303,New,3,40,database,General PCs simulation software,lab
+OB-L1,Old,1,40,mobile_dev,Standard PCs Office Suite,lab
+OB-L2,Old,1,40,database,Standard PCs Office Suite,lab
+OB-L3,Old,1,40,mobile_dev,Upgraded to 40 seats Standard PCs,lab
+AB-101,Admin,1,45,mobile_dev,Computer lab with dev tools,lab
+AB-102,Admin,1,40,programming,Computer lab standard PCs,lab
+AB-201,Admin,2,50,programming,Computer lab IDEs,lab
+EB-L1,Engineering,1,40,programming,Engineering computer lab,lab
+LIB-CL,Library,2,40,programming,Library computer lab upgraded to 40 seats,lab

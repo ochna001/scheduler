@@ -1,0 +1,22 @@
+code,name,program,year,lec_hours,lab_hours,room_type_required
+IT100,Intro to Computing,IT,1,2,1,programming
+IT101,Computer Programming 1,IT,1,2,1,programming
+IT102,Computer Programming 2,IT,1,2,1,programming
+IT103,Data Structures and Algorithms,IT,1,2,1,programming
+IT104,Discrete Math,IT,1,3,0,general
+IT105,Applications Development,IT,2,2,1,programming
+IT106,Information Management,IT,2,2,1,general
+IT107,Intro to HCI,IT,2,2,1,web_dev
+IT109,Fundamentals of Database Systems,IT,2,2,1,database
+IT110,Computer Architecture and Robotics,IT,2,2,1,systems
+IT111,Integrating Technologies 1,IT,2,2,1,web_dev
+IT112,Mobile Applications,IT,2,2,1,mobile_dev
+IT114,Quantitative Methods,IT,3,2,1,general
+IT115,Networking 1,IT,3,2,1,networking
+IT116,Systems Analysis and Design,IT,3,2,1,general
+IT117,Systems Admin and Maintenance,IT,3,2,1,systems
+IT120,Networking 2,IT,3,2,1,networking
+IT121,Capstone Project and Research 1,IT,3,2,1,general
+IT125,Capstone Project and Research 2,IT,4,2,1,general
+ITELEC001,IT Elective 1,IT,3,2,1,general
+ITELEC003,IT Elective 3,IT,4,2,1,general

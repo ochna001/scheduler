@@ -1,0 +1,532 @@
+﻿CAPSULE RESEARCH PROPOSAL FOR SIMULATION AND MODELING 
+ 
+Proposed Title of Research: Modelling and Simulating Classroom Space Allocation in CCMS New Building and Old Laboratory
+	Proponents 
+	Mazo, Kenji U.
+Quierra, Janero Marco M.
+	College/Office 
+	 CCMS
+	Coproponent 
+	 
+	Contact Number 
+	 +639669119871
+	Research Asst. 
+	 
+	Email 
+Address 
+	 kenjimazo@gmail.com
+	Classification 
+	 
+Mode of Implementation 
+	Research 
+	Development 
+	 
+	 
+Basic 
+	 
+	 
+Pilot Testing 
+	 /
+	 
+Individual 
+	/ 
+	 
+Applied 
+	 
+	Tech Promotion/   Commercialization 
+	 
+	 
+Interdisciplinary 
+	CNSC Research Agenda 
+	 
+	Food Security and Poverty Reduction 
+	 
+	Pollution Control 
+	 /
+	Education and Capability Building 
+	 
+	Competitiveness 
+	 
+	Community based/participatory 
+	 
+	Natural Resources Management 
+	 
+	Technology Development 
+	 
+	Information, Communication Technology 
+	 
+	Health and Nutrition 
+	 
+	DRRM / Climate Change Adaptation 
+	 
+Rationale/Significance 
+ 
+	 
+State the research problem and significance of the proposed study to the current needs of the country. The proposal should clearly discuss the specific needs/ problems to be addressed and the proponent should have a clear understanding of the needs/ problems in the research area of interest. Benefits of research in the institution shall be discussed. 
+ 
+	The College of Computing and Multimedia Studies (CCMS) at our institution faces significant challenges in managing its educational resources due to rapidly increasing enrollment in technology and media-related disciplines. The newly established three-floor building, with three rooms per floor, and an existing older building with three laboratory rooms, provide critical infrastructure to meet this demand. However, the absence of an optimized system for room allocation and time scheduling risks underutilization or overcrowding, leading to scheduling conflicts, inefficient use of laboratory spaces, and disruptions in academic delivery. The specific problems to be addressed are: (1) the lack of a systematic approach to assign rooms based on class sizes, course requirements, and student numbers, and (2) the absence of an efficient timetabling mechanism to minimize overlaps and maximize resource utilization. These issues, rooted in manual or ad-hoc management practices, hinder the institution’s ability to deliver high-quality education in computing and multimedia fields, which are critical to the Philippines’ growing digital economy (DepEd, 2020).
+The proposed study is highly significant in addressing the Philippines’ urgent need to enhance educational infrastructure and resource management to support its digital transformation. The country’s information and communications technology (ICT) sector is a key driver of economic growth, contributing 7.5% to the GDP in 2023, yet the lack of adequate educational facilities limits the production of skilled graduates (Philippine Statistics Authority, 2023). By optimizing room allocation and scheduling at CCMS, this study aligns with national goals to produce competent professionals in technology and media, addressing the skill gap in the labor market. In the Philippines, where only 60% of higher education institutions have adequate facilities for STEM programs, inefficient resource management exacerbates educational inequities and hampers national competitiveness in the global knowledge economy (Commission on Higher Education, 2021). The study draws inspiration from a Rwandan case study that successfully used linear programming for classroom allocation, demonstrating the potential for similar optimization techniques to improve operational efficiency in the Philippine context (Niyonzima & Mukasekuru, 2021).
+High-quality classrooms and efficient scheduling are pivotal to educational quality. Well-designed facilities, including adequate laboratories, enhance student engagement and academic performance. Research shows that modern school environments with proper ventilation and technology access improve test scores by up to 10% and increase attendance rates (Barrett et al., 2019). In the Philippines, a study found that 70% of public universities face challenges with outdated facilities, negatively impacting student outcomes in technical disciplines (Santos & Reyes, 2022). Poor classroom conditions, such as overcrowding, affect student well-being and engagement, with 53% of tertiary institutions reporting infrastructure deficiencies that limit hands-on learning (Commission on Higher Education, 2021). Efficient scheduling is equally critical, as poorly designed timetables increase administrative burdens and student stress, reducing academic achievement by approximately 7.5% compared to well-structured schedules (Cortes et al., 2017). Flexible timetables also improve student persistence by 5-7 percentage points, supporting on-time graduation and reducing financial burdens (Hanover Research, 2022).
+The study will provide substantial benefits to the institution by enabling data-driven resource management, reducing inefficiencies, and enhancing the learning environment. Optimized room allocation will ensure equitable access to laboratories and classrooms, fostering hands-on learning critical for computing and multimedia disciplines. Efficient scheduling will minimize conflicts, streamline academic operations, and increase faculty productivity. These improvements are expected to boost student satisfaction, retention, and graduation rates, aligning with institutional goals for academic excellence and accreditation. In the Philippine context, where 65% of students report dissatisfaction with scheduling inefficiencies, such improvements could significantly enhance the institution’s reputation (Santos & Reyes, 2022). By positioning CCMS as a leader in technology education, the study will strengthen the institution’s role in producing graduates who meet industry demands.
+The proposed optimization model will address both current and future needs by accommodating growing enrollment and evolving course requirements. By leveraging data-driven techniques, such as those used in the Rwandan study, the model will ensure scalable solutions that adapt to increasing student numbers and changing academic demands (Niyonzima & Mukasekuru, 2021). This is particularly relevant in the Philippines, where enrollment in ICT-related programs has grown by 15% annually since 2020 (Philippine Statistics Authority, 2023). The study’s outcomes will also support long-term sustainability by reducing operational costs through efficient resource use, aligning with national priorities for educational reform and economic development (DepEd, 2020).
+
+
+
+
+	 
+Objectives 
+ 
+	General Objective:
+To develop and implement an optimized classroom and laboratory allocation and scheduling system that maximizes the utilization of facilities in both the new CCMS building and the existing laboratory building, ensuring equitable and efficient use for current and future students.
+Specific Objectives:
+1.         To assess current and projected space requirements by gathering and analyzing enrollment data, program needs, and facility capacities.
+2.         To design a room allocation plan that assigns classes based on capacity, functionality, and accessibility, ensuring fair distribution across programs.
+3.         To establish an optimized time scheduling framework that minimizes conflicts, balances classroom usage, and prevents overcrowding.
+4.         To apply linear optimization techniques to generate data-driven allocation and scheduling models adapted from the referenced study’s methodology.
+5. To recommend operational policies (e.g., room maintenance protocols and scheduling guidelines) to address space and equipment constraints.
+	Methodology  
+(Brief description of how the study will be implemented) 
+ 
+	The methodology includes the methods, procedure and techniques used to collect and analyze information. It should include the research design, participants and process of selecting sample respondents, validation and reliability of the instrument/s to be used, methods and data collection, data analysis and procedure and statement how ethical issues will be addressed. 
+	
+
+Research Design
+This study will use a mixed-methods research design, combining quantitative and qualitative approaches to achieve the objectives. The quantitative component will focus on collecting and analyzing numerical data (e.g., enrollment numbers, room capacities) to develop the linear programming model for room allocation and scheduling (Objectives 1, 2, 3, and 4). The qualitative component will involve gathering insights from stakeholders (e.g., faculty, students, administrators) to understand program needs, accessibility issues, and policy preferences (Objectives 1 and 5). This design is appropriate for the Philippine context, where stakeholder input is critical due to diverse needs in higher education institutions (Santos & Reyes, 2022). The study will follow an applied research approach, aiming to solve the practical problems of room allocation and scheduling at CCMS, with results directly applicable to the institution.
+Participants and Sampling Process
+The participants will include:
+* Administrators (e.g., CCMS dean, facilities managers) to provide data on room capacities, current schedules, and operational constraints.
+* Faculty members (approximately 20–30, depending on CCMS size) to share course requirements (e.g., lab needs) and scheduling preferences.
+* Students (a sample of 100–150 from computing and multimedia programs) to provide feedback on accessibility, scheduling flexibility, and classroom conditions.
+* Registrar and IT staff to supply enrollment data and technical support for modeling.
+Sampling Process: A purposive sampling technique will be used to select participants who are directly involved in or affected by room allocation and scheduling. Administrators and faculty will be chosen based on their roles in academic planning, while students will be selected to represent different year levels and programs (e.g., computer science, multimedia arts) to ensure diverse perspectives. In the Philippines, where student input is often underutilized in institutional planning (Commission on Higher Education, 2021), this approach ensures inclusivity. Sample sizes will be finalized based on CCMS’s enrollment (e.g., targeting 10–15% of the student population for surveys).
+Validation and Reliability of Instruments
+The study will use three main instruments:
+1. Survey Questionnaires: For students and faculty to collect data on course needs (e.g., lab requirements), scheduling preferences (e.g., preferred times), and accessibility issues (e.g., room location). Questions will be developed based on literature and tailored to CCMS’s context.
+2. Data Collection Forms: For administrators to document enrollment numbers, room capacities (e.g., seating for nine rooms in the new building, three labs in the old), and equipment availability.
+3. Interview Guides: For qualitative insights from key stakeholders (e.g., deans, facilities staff) on operational challenges and policy recommendations.
+Validation: Instruments will be validated through:
+* Content Validity: A panel of experts (e.g., two faculty members, one facilities manager, one CHED consultant) will review the instruments to ensure they align with the objectives and reflect Philippine higher education needs.
+* Pilot Testing: Surveys will be tested with a small group (e.g., 10 students, 5 faculty) to check clarity and relevance. Feedback will be used to revise questions before full deployment.
+Reliability: For surveys, reliability will be assessed using Cronbach’s Alpha (targeting ≥0.7) to ensure internal consistency of questions. Interview guides will be standardized to ensure consistent data collection. These steps align with best practices in Philippine academic research to ensure credible data (Santos & Reyes, 2022).
+Methods and Data Collection
+Data collection will occur in three phases to address all objectives:
+1. Phase 1: Data Gathering for Objective 1 (Assess Space Requirements)
+   * Method: Collect quantitative data via data collection forms from the registrar (enrollment trends, projected growth based on 15% annual increase; Philippine Statistics Authority, 2023) and facilities office (room and lab capacities, equipment details). Conduct surveys with students and faculty to identify program needs (e.g., lab time for multimedia courses). Hold semi-structured interviews with administrators to understand operational constraints.
+   * Timeline: 2–3 weeks.
+   * Output: Comprehensive dataset on enrollment, room capacities, and program needs.
+2. Phase 2: Development for Objectives 2, 3, and 4 (Room Allocation, Scheduling, Linear Optimization)
+   * Method: Use quantitative data from Phase 1 to design a room allocation plan (Objective 2) and scheduling framework (Objective 3). Develop a linear programming model, adapted from the Rwandan study (Niyonzima & Mukasekuru, 2021), using the Dual Simplex algorithm to optimize room and time slot assignments. The model will include variables like class size, room capacity, course type (lecture vs. lab), and time preferences. Software like Python (PuLP library) or Excel Solver will be used, accessible to Philippine universities with limited budgets. Conduct focus group discussions with faculty and students to refine the allocation and scheduling plans for practicality and fairness.
+   * Timeline: 4–6 weeks.
+   * Output: Optimized allocation plan and timetable, validated by stakeholders.
+3. Phase 3: Policy Recommendations for Objective 5
+   * Method: Analyze findings from Phases 1 and 2 to draft operational policies (e.g., room booking protocols, maintenance schedules for labs). Conduct workshops with administrators and faculty to co-create policies, ensuring buy-in and feasibility within CCMS’s resources. Policies will address space constraints (e.g., prioritizing lab access) and equipment maintenance to sustain the optimization model.
+   * Timeline: 2–3 weeks.
+   * Output: Policy document with actionable guidelines.
+Data Analysis and Procedure
+* Quantitative Analysis:
+   * Objective 1: Descriptive statistics (e.g., means, percentages) will summarize enrollment data, room capacities, and survey responses using SPSS or Excel. Trend analysis will project future space needs based on historical data (e.g., 15% growth; Philippine Statistics Authority, 2023).
+   * Objectives 2 and 3: Allocation and scheduling plans will be developed using spreadsheet-based tools initially, followed by integration into the linear programming model.
+   * Objective 4: The linear programming model will be solved using the Dual Simplex algorithm to find optimal room and time assignments. Sensitivity analysis will test the model’s robustness by varying parameters (e.g., enrollment changes, room availability) to ensure adaptability, as done in the Rwandan study (Niyonzima & Mukasekuru, 2021). Key metrics (e.g., room utilization rate, conflict-free schedules) will be calculated to evaluate success.
+* Qualitative Analysis:
+   * Objectives 1 and 5: Thematic analysis will be used for interview and focus group data to identify recurring themes (e.g., accessibility concerns, policy preferences). NVivo or manual coding will be applied, depending on resources, to ensure rigorous analysis aligned with Philippine research standards (Santos & Reyes, 2022).
+* Procedure: Data will be cleaned and organized in a database (e.g., Excel or Access). Quantitative analysis will precede qualitative analysis to inform model development, followed by stakeholder validation to ensure practical applicability.
+Addressing Ethical Issues
+Ethical protocols will be strictly followed to ensure responsible research conduct, especially in the Philippine context where ethical oversight is emphasized (Commission on Higher Education, 2021):
+* Informed Consent: All participants (students, faculty, administrators) will receive clear information about the study’s purpose, procedures, and their rights. Signed consent forms will be collected before surveys or interviews, with digital options for convenience.
+* Confidentiality: Data will be anonymized (e.g., using ID codes instead of names) and stored securely on password-protected devices. Only the research team will access raw data.
+* Institutional Ethics Approval: The study will seek approval from the institution’s ethics review board, adhering to CHED guidelines for academic research. The application will detail data handling, participant protections, and risk mitigation.
+* Voluntary Participation: Participants can withdraw at any time without consequences, and no incentives will be offered to avoid coercion.
+* Data Use Transparency: Findings will be shared with participants and CCMS administrators in a summary report, ensuring transparency and community benefit.
+
+
+	 
+ 
+	 
+Activities 
+	Duration (Timeline) 
+	September
+	 October
+	November
+	December
+	1. Initial planning and literature review: Review the Rwandan study and similar resources; outline how to adapt it for CCMS; consult instructor for basic guidance on objectives and tools (Aligns with all objectives, especially Obj 4)
+	Sept 5-11 (Read papers, discuss as a team, meet instructor for quick advice)
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	2. Request and gather data for Obj 1: Email/meet instructors for enrollment data, program needs (e.g., course lists, lab requirements), and facility details (room capacities in new/old buildings); collect via forms or spreadsheets
+ 
+	 
+	Sept 12-25 (Send requests, follow up, organize raw data)
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	3. Analyze data for Obj 1: Use Excel to summarize enrollment trends (e.g., project 15% growth), room capacities, and needs; identify gaps like lab shortages; consult instructor if stuck on projections
+	 
+	Sept 26-30 (Start descriptive stats)
+
+
+	 Oct 1-4 (Finish analysis, draft space report)
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	4. Learn basics of linear programming: Watch tutorials (e.g., YouTube on PuLP/Excel Solver); practice simple models as a team; consult instructor for tips (Prep for Obj 4) 
+	 
+	 
+	Oct 7-11 (Practice sessions, test small examples)
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	5. Design room allocation plan for Obj 2: Match classes to rooms based on capacity/functionality/accessibility; use spreadsheets to map (e.g., fair distribution across programs); get instructor feedback
+	 
+	 
+	 
+Oct 14-25 (Draft plan, test for fairness)
+	 Oct 28 (Refine with feedback)
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	6. Develop scheduling framework for Obj 3: Create timetable templates in Excel to minimize conflicts and balance usage; incorporate flexibility (e.g., for working students); simulate a sample week
+	 
+	 
+	 
+
+
+	 
+
+
+	Oct 28-31 (Start drafting) 
+	 Nov 1-8 (Test for overcrowding, adjust)
+	 
+	 
+	 
+	 
+	7. Build and apply linear optimization model for Obj 4: Code the model in Python/Excel using Dual Simplex; input data from Obj 1; adapt from Rwandan study; run initial tests
+	 
+	 
+	 
+	 
+	 
+	 Nov 11-22 (Build model, run optimizations)
+
+
+	
+
+ Nov 25-29 (Debug and finalize)
+	 
+	 
+	 
+	8. Perform sensitivity analysis for Obj 4: Test model variations (e.g., +10-20% enrollment); interpret results for robustness; consult instructor on outputs
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	Dec 2-6 (Run scenarios, document findings)
+	 
+	9. Draft operational policies for Obj 5: Based on all prior outputs, recommend 5-10 policies (e.g., maintenance protocols); discuss as a team and get instructor input
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	Dec 9-13 (Draft and revise) 
+	10. Integrate all outputs: Combine report, plans, model, and policies into a full document; test the system on a sample semester; prepare visuals (e.g., charts)
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	Nov 25-30 (Start integration during analysis)
+	
+
+
+
+	Dec 2-13 (Full compilation, team review)
+
+
+	11. Prepare for final defense: Create presentation slides; practice as a team; incorporate any last feedback from instructor
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	Dec 9-13 (Slides and rehearsal)
+
+
+	12. Final defense and submission: Present to panel; submit terminal report with all outputs (e.g., report, model code, policies)
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	Dec 9-13 (Defense date; submit by end of week)
+
+
+	 
+	 
+Expected Output 
+(Indicate the specific products, processes or services which the study is expected to produce and how these 
+ can be used; quantify when possible) 
+ 
+	  The study is set to come up with these specific products, processes, and services to help fix the room allocation and scheduling issues at CCMS, making sure everything runs smooth for students now and in the coming years:
+1. Comprehensive Space and Enrollment Report: A detailed report that sums up the current and future space needs based on enrollment numbers, what programs require, and how much the rooms can hold. This includes hard numbers like student count per course (around 500–700, with 15% yearly growth from Philippine Statistics Authority, 2023), room sizes (nine rooms in the new building, each good for 30–50 people, and three labs in the old one for 20–25 each), and feedback from teachers and students on things like lab needs for media classes.
+2. Optimized Room Allocation Plan: A plan based on data that assigns classes to the nine rooms in the new CCMS building and the three labs in the old one, considering how many people fit, what the room is best for (like labs for practical work), and easy access (like ground floor for those who need it). It makes sure programs like computer science and multimedia get a fair share, without any room getting too packed.
+3. Optimized Time Scheduling Framework: A timetable setup that cuts down on clashes (no two classes in the same spot at once), spreads out room use evenly (no room sitting empty more than 20% of the day), and stops overcrowding. It includes options like night classes for students with jobs, fixing the issue where 30% can't work because of bad schedules (Technology1, 2022).
+4. Linear Programming Model with Sensitivity Analysis: A math model using linear programming, solved with the Dual Simplex method and based on the Rwanda study (Niyonzima & Mukasekuru, 2021), to pick the best rooms and times for classes. It factors in stuff like class size, room space, and course type, plus checks how it holds up if things change (like a 10–20% jump in students). The model will be made in simple software like Python or Excel Solver.
+ 
+	Implementing Schedule 
+	Month 
+	Year 
+	 
+Duration in Months 
+	Planned Start Date 
+	September  
+	2025 
+	Planned Completion Date  
+	December 
+	 2025
+	 4
+	 
+	
+
+	 
+Budgetary Requirement 
+	
+
+	 
+Particulars 
+	Source of Funds 
+	
+
+	PS 
+	MOE 
+	INC 
+	CO 
+	TOTAL 
+	 Food
+	 
+	 600
+	 
+	 
+	600 
+	Transportation
+	 
+	1000
+	 
+	 
+	1000  
+	 Paper/Printing
+	 
+	500
+	 
+	 
+	500 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 Total materials, supplies and equipment 
+	 
+	 
+	 
+	 
+	 3500
+	
+
+	 
+	 
+	 
+	 
+	 
+	B. Other Operating Expenses 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	Total Budgetary requirements 
+	 
+	 
+	 
+	 
+	  2100
+	  
+	 
+ References 
+ 
+	
+
+	
+
+	* Barrett, P., Davies, F., Zhang, Y., & Barrett, L. (2019). The impact of classroom design on pupils’ learning: Final results of a holistic, multi-level analysis. Building and Environment, 89, 118–133. https://doi.org/10.1016/j.buildenv.2015.02.013
+* Commission on Higher Education. (2021). State of higher education facilities in the Philippines: A report on STEM programs. CHED. https://ched.gov.ph/reports/facilities-stem-2021
+* Cortes, K. E., Bricker, J., & Rohlfs, C. (2017). The impact of timetable changes on student achievement and well-being. Economics of Education Review, 60, 90–104. https://doi.org/10.1016/j.econedurev.2017.07.003
+* DepEd. (2020). Philippine education reform agenda: Infrastructure and resource management. Department of Education. https://www.deped.gov.ph/education-reform-2020
+* Hanover Research. (2022). Best practices in course scheduling. https://f.hubspotusercontent30.net/hubfs/4523134/Hanover%2520Research%2520-%2520Best%2520Practices%2520in%2520Course%2520Scheduling-1.pdf
+* Niyonzima, E., & Mukasekuru, A. (2021). Modelling classroom space allocation at University of Rwanda: A linear programming approach. Applied Mathematics, 16(1), 40. https://digitalcommons.pvamu.edu/aam/vol16/iss1/40/
+* Philippine Statistics Authority. (2023). Economic contributions of the ICT sector in the Philippines. PSA. https://psa.gov.ph/statistics/ict-contribution-2023
+* Santos, M., & Reyes, J. (2022). Challenges in Philippine higher education: Infrastructure and scheduling inefficiencies. Philippine Journal of Education, 45(2), 78–92. https://www.pjedu.ph/articles/2022/infrastructure-challenges
+* Technology1. (2022). 30% of students unable to secure part-time jobs due to poor university timetable. https://www.technology1.com/resources/media-releases/30-of-students-unable-to-secure-part-time-jobs-due-to-poor-university-timetable
+	
+
+	*adopted from DOST Forms 1A and 1B Capsule RD Proposal with modification
