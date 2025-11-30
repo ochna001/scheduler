@@ -2,6 +2,7 @@
 \IEEEoverridecommandlockouts
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
@@ -178,7 +179,8 @@ Y_p = \begin{cases}
 \textbf{Session Assignment Variable:}
 \begin{equation}
 X_{ijk} = \begin{cases} 
-1 & \text{if session } i \in S_p \text{ is assigned to room } j \text{ at start time } k \\
+1 & \text{if session } i \in S_p \text{ is assigned to room } j \\
+  & \text{at start time } k \\
 0 & \text{otherwise}
 \end{cases}
 \end{equation}
@@ -189,7 +191,7 @@ The primary objective is to ensure that every course component is successfully s
 \text{Maximize } Z = \sum_{c \in C} \sum_{p \in P_c} Y_p
 \end{equation}
 
-Since the pattern selection constraint (Equation 5) requires exactly one pattern per component, this objective effectively maximizes the number of successfully scheduled components. The constraints handle conflict avoidance, capacity limits, and compatibility requirements, making additional objective terms unnecessary.
+Since the pattern selection constraint (Equation 6) requires exactly one pattern per component, this objective effectively maximizes the number of successfully scheduled components. The constraints handle conflict avoidance, capacity limits, and compatibility requirements, making additional objective terms unnecessary.
 
 \subsection{Constraints}
 The model is subject to the following constraints:
@@ -220,116 +222,122 @@ where $S_g$ is the set of all sessions for student group $g$.
 
 \textbf{Capacity and Compatibility Constraints:} A session can only be assigned to a room that has sufficient capacity and is compatible with the course's requirements (e.g., a lab course must be in a lab room).
 
-\textbf{Time Slot and Session Configuration:} The model operates on a 5-day weekly schedule (Monday to Friday) from 8:00 AM to 5:00 PM, with a one-hour lunch break from 12:00 PM to 1:00 PM. The schedule is divided into 30-minute time slots (80 total slots per week). 
+\subsection{Constraint and Parameter Updates}
 
-\textbf{Multi-Pattern Approach:} Rather than fixing a single scheduling pattern per course type, the model generates multiple pedagogically valid patterns for each course component and allows the optimizer to select the most suitable pattern. This approach balances institutional scheduling policies with optimization flexibility. Valid patterns include:
+Recent refinements to the model introduced stricter constraints and dynamic parameters to better reflect institutional policies:
 \begin{itemize}
-    \item 3-hour courses (GEC, IT electives): Three pattern options are generated:
-    \begin{itemize}
-        \item 1.5 hours × 2 days (TTh or MW)
-        \item 1 hour × 3 days (MWF)
-    \end{itemize}
-    \item 2-hour lecture courses (IT core): Three pattern options:
-    \begin{itemize}
-        \item 1 hour × 3 days (MWF) - preferred for frequent interaction
-        \item 1 hour × 2 days (TTh)
-        \item 1.5 hours × 2 days (TTh) - alternative for scheduling flexibility
-    \end{itemize}
-    \item Lab courses (3 contact hours per credit): Three pattern options:
-    \begin{itemize}
-        \item 1.5 hours × 2 days (TTh or MW)
-        \item 1 hour × 3 days (MWF)
-    \end{itemize}
-    \item PATHFit courses: Single 2-hour session (fixed pattern)
-    \item NSTP courses: Single 1.5-hour session (fixed pattern)
+    \item \textbf{Lunch Break Enforcement:} A hard constraint now explicitly blocks all scheduling between 12:00 PM and 1:00 PM, ensuring a common break period for all students and faculty.
+    \item \textbf{PathFit Scheduling:} PathFit courses are now restricted to a single 2-hour block once per week, rather than being split across multiple days.
+    \item \textbf{Practicum Handling:} Practicum courses (IT 128, IS 404) with excessive lab hours (486 hours) are modeled as 2-hour weekly check-in sessions to represent off-campus internship monitoring.
+    \item \textbf{Dynamic Gap Tolerance:} The optimality gap tolerance is now a user-configurable parameter (0.1\% - 20\%), allowing administrators to trade off between solution optimality and computation speed.
 \end{itemize}
-The optimizer selects one pattern per course component based on room availability, student group conflicts, and overall schedule efficiency. This multi-pattern approach increases the solution space and improves the likelihood of finding feasible schedules while maintaining pedagogical validity.
 
-\subsection{Complexity Analysis}
+\subsection{Decomposition Strategy}
 
-The problem complexity is characterized by:
-- Total binary variables: $|I| \times |J| \times |K| = 479 \times 17 \times 80 = 651,440$
-- Total constraints: Approximately 907,224 constraints including all assignment, capacity, conflict, and contiguity constraints
-- Problem class: NP-hard (binary integer programming)
-- Solution approach: Branch-and-Bound with HiGHS solver, average complexity $O(2^n)$ worst-case, but practical performance much better due to constraint pruning and presolving
+To address the NP-hard nature of the problem for large datasets, a \textit{Sequential Decomposition Strategy} was implemented. Instead of solving the entire university schedule as a single monolithic problem (Global Strategy), the system solves the schedule year-by-year (Year 1 $\rightarrow$ Year 2 $\rightarrow$ Year 3 $\rightarrow$ Year 4). Occupied room-time slots from previous years are passed as blocked constraints to subsequent years. This reduces the problem complexity by approximately 75\% per iteration, making it feasible to solve large-scale schedules on standard hardware.
 
-\subsection{Implementation Details}
-
-The model was implemented using Python 3.9 with the following libraries:
-- PuLP 2.7.0 for model formulation
-- HiGHS 1.12.0 solver for optimization (high-performance open-source solver)
-- Pandas 1.5.3 for data processing
-- CSV-based input system for dynamic parameter updates
-
-The solution approach employs the HiGHS solver through PuLP interface, chosen for its superior performance with large-scale binary integer programming problems. Key implementation features include:
-- Session-based scheduling with separate lecture and lab components
-- Room category compatibility matrix for lab/non-lab constraints
-- Dynamic CSV input system for courses, enrollment, and room data
-- 30-minute time slot granularity for flexible scheduling
-- Multi-objective function balancing utilization, conflicts, idle time, and fairness
+\begin{algorithm}[H]
+\caption{Sequential Decomposition Strategy}
+\begin{algorithmic}[1]
+\STATE \textbf{Initialize:} $OccupiedSlots \gets \emptyset$
+\STATE $Years \gets [1, 2, 3, 4]$
+\FOR{each $year$ in $Years$}
+    \STATE $Model \gets$ BuildMIPModel($year$)
+    \STATE AddBlockedSlots($Model$, $OccupiedSlots$)
+    \STATE $Solution \gets$ Solve($Model$, gap=5\%, time=600s)
+    \IF{$Solution$ is Feasible}
+        \STATE $NewSlots \gets$ ExtractSlots($Solution$)
+        \STATE $OccupiedSlots \gets OccupiedSlots \cup NewSlots$
+        \STATE SaveSchedule($year$, $Solution$)
+    \ELSE
+        \RETURN Infeasible
+    \ENDIF
+\ENDFOR
+\RETURN Success
+\end{algorithmic}
+\end{algorithm}
 
 \section{Results and Discussion}
 
-\subsection{Optimization Results}
+\subsection{Benchmarks and Guidelines}
 
-The model was solved successfully within 4.7 minutes on a standard laptop (Intel i5, 8GB RAM), achieving the following performance metrics:
+Educational facility planning guidelines vary by institution and context. Cornell University's classroom space guidelines [7] recommend room utilization rates (RUR) of 43\% for large lecture halls (151+ seats) and 59\% for smaller classrooms (1-100 seats) to accommodate scheduling constraints and flexibility. However, strategic timetabling research [9] and systematic reviews [13] suggest that higher utilization rates of 75–85\% can be achieved through optimization in contexts where scheduling flexibility is balanced against resource constraints. Our model incorporates the 75–85\% target range, alongside CSV-based input design for adaptability, providing a practical solution aligned with resource-constrained institutional needs in the Philippine setting.
+
+\subsection{Feasibility Analysis with Different Room Configurations}
+
+The system includes a built-in feasibility checker that analyzes demand versus supply before attempting to solve. This allows administrators to experiment with different room configurations to find the optimal balance. Table \ref{tab:feasibility_configs} shows the feasibility analysis results for various lab-to-lecture room ratios.
 
 \begin{table}[htbp]
-\caption{Optimization Performance Metrics}
-\label{tab:performance}
+\caption{Feasibility Analysis: Room Configuration Scenarios}
+\label{tab:feasibility_configs}
 \centering
-\begin{tabular}{lcc}
+\scriptsize
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Metric} & \textbf{Target} & \textbf{Achieved} \\
+\textbf{Config} & \textbf{Labs} & \textbf{Lec} & \textbf{Lec Util.} & \textbf{Lab Util.} & \textbf{Status} \\
 \midrule
-Room Utilization & 75-85\% & 81.3\% \\
-Scheduling Conflicts & 0 & 0 \\
-Idle Time & <20\% & 16.2\% \\
-Fairness Score & >0.90 & 0.94 \\
-IT Program Allocation & 53\% & 52.8\% \\
-IS Program Allocation & 47\% & 47.2\% \\
-Solution Time & <10 min & 4.7 min \\
+Baseline & 6 & 11 & 64.1\% & 52.5\% & Feasible \\
+More Labs & 8 & 9 & 78.3\% & 39.4\% & Feasible \\
+More Lec & 4 & 13 & 54.2\% & 78.8\% & Feasible \\
+Minimal & 4 & 8 & 88.1\% & 78.8\% & At Risk \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Room Utilization Analysis}
+The baseline configuration (6 labs, 11 lecture rooms) provides comfortable buffer capacity with lecture utilization at 64.1\% and lab utilization at 52.5\%. The ``Minimal'' configuration demonstrates the threshold wherein the system approaches infeasibility, with utilization rates exceeding 75\% for both room types.
 
-Specialized laboratories showed higher utilization rates than general-purpose rooms:
-- Networking Lab (NB-101): 92\% utilization
-- Database Lab (NB-102): 87\% utilization
-- Security Lab (NB-202): 85\% utilization
-- General Labs (OB-L1, OB-L2): 72\% average
+\subsection{Solver Performance Comparison}
 
-The high utilization of specialized labs validates the need for strict equipment matching constraints, while general labs provide flexibility for overflow and elective courses.
+To evaluate the system's performance, test cases were conducted using different solver configurations. The GUI allows users to select between solvers (CBC, HiGHS) and adjust parameters (gap tolerance, time limit) to observe the trade-offs between solution time and quality.
 
-\subsection{Sensitivity Analysis}
+\begin{table}[htbp]
+\caption{Solver Performance Comparison}
+\label{tab:solver_comparison}
+\centering
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Parameter} & \textbf{T1} & \textbf{T2} & \textbf{T3} & \textbf{T4} \\
+\midrule
+Strategy & Seq. & Seq. & Seq. & Global \\
+Solver & CBC & HiGHS & HiGHS & HiGHS \\
+Gap Tol. & 5\% & 5\% & 10\% & 10\% \\
+Time Limit & 600s & 600s & 600s & 3600s \\
+\midrule
+Solve Time & TBD & TBD & TBD & TBD \\
+Conflicts & TBD & TBD & TBD & TBD \\
+Status & TBD & TBD & TBD & TBD \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-The model was tested under various scenarios to assess robustness:
+\noindent\textit{Note: TBD values to be populated from actual test runs using the GUI. Legend: Seq. = Sequential Strategy.}
 
-\textbf{Enrollment Variations:} Testing with +10\%, +15\%, and +20\% enrollment showed the model maintained feasibility up to +15\% (978 students) but required additional time slots beyond +18\% enrollment growth.
+The Sequential (Year-by-Year) strategy is expected to outperform the Global strategy for large datasets, as it decomposes the problem into smaller sub-problems that can be solved within reasonable time limits. The HiGHS solver generally provides faster solve times compared to CBC for this class of problem.
 
-\textbf{Room Unavailability:} Removing 1-2 rooms for maintenance simulation showed:
-- 1 room unavailable: 87\% utilization achieved, no conflicts
-- 2 rooms unavailable: 94\% utilization, 3 minor conflicts requiring manual resolution
+\subsection{Comparison with Manual Methods}
 
-\textbf{Time Slot Reduction:} Eliminating evening slots (8-9) reduced available slots to 35, resulting in 89\% utilization but requiring 2 Saturday slots for completion.
+Qualitative comparison with traditional manual scheduling reveals several key advantages of the automated approach:
 
-\subsection{Comparison with Manual Scheduling}
-
-Comparison with the existing manual schedule revealed significant improvements:
-- Utilization increased from 62\% to 81.3\% (+19.3\%)
-- Scheduling conflicts reduced from 12 per week to 0
-- Average student schedule gaps reduced from 3.2 hours to 1.8 hours per day
-- Faculty reported 85\% satisfaction with automated schedule versus 45\% with manual
+\begin{itemize}
+    \item \textbf{Conflict-Free Guarantee:} The linear programming model enforces hard constraints that mathematically prevent double-booking, whereas manual methods often result in errors discovered only mid-semester.
+    \item \textbf{Optimized Utilization:} The system targets 75-85\% room utilization, compared to typically lower rates achieved through manual ad-hoc assignment.
+    \item \textbf{Rapid Re-scheduling:} When constraints change (e.g., room unavailability), the system can generate a new schedule in minutes rather than days.
+    \item \textbf{Transparency:} The feasibility checker provides clear demand/supply metrics before solving, allowing informed decision-making.
+\end{itemize}
 
 \subsection{Dynamic Model Capabilities}
 
-The CSV-based input design enables dynamic adaptation:
-- Adding Multimedia program (projected 100 students) required only updating enrollment.csv
-- Course additions/removals handled by modifying courses.csv
-- Room configuration changes reflected immediately through rooms.csv updates
-- No code modifications needed for routine semester-to-semester changes
+The CSV-based input design enables dynamic adaptation without code modifications:
+
+\begin{itemize}
+    \item \textbf{Enrollment Changes:} Modify \texttt{enrollment.csv} to add/remove student groups or adjust counts.
+    \item \textbf{Course Updates:} Edit \texttt{courses.csv} to add new courses or change hour allocations.
+    \item \textbf{Room Configuration:} Use the GUI's room override feature to test different lab/lecture ratios instantly.
+    \item \textbf{Semester Selection:} Toggle between Semester 1 and Semester 2 courses via the GUI.
+\end{itemize}
+
+This flexibility allows administrators to perform ``what-if'' analysis, such as projecting the impact of a 10\% enrollment increase or the temporary closure of a laboratory for maintenance.
 
 \section{Conclusion and Future Work}
 

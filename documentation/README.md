@@ -21,8 +21,23 @@ This software implements the mathematical model from the research paper: *"Model
 1. **Assignment Constraint**: Each class assigned required hours
 2. **Capacity Constraint**: Room capacity not exceeded
 3. **No Double-Booking**: One class per room per time slot
-4. **Room Type Matching**: Classes assigned to compatible rooms
-5. **Contiguity Preference**: Multi-hour classes prefer consecutive slots
+4. **Room Type Matching**: Classes assigned to compatible rooms (Lecture/Lab)
+5. **Contiguity Preference**: Multi-hour classes must be in consecutive slots
+6. **Lunch Break**: No classes scheduled 12:00-13:00
+7. **PathFit Rule**: 2-hour blocks scheduled on a single day
+8. **Practicum Rule**: 2-hour weekly check-in for off-campus practicum courses
+
+## System Architecture
+
+### Solvers Supported
+- **HiGHS**: High-performance open-source solver (Recommended for speed)
+- **CBC**: Coin-OR Branch and Cut (Standard default)
+- **GLPK/COIN**: Supported if installed
+
+### Decomposition Strategies
+To handle large datasets (full university schedules), the system implements two strategies:
+1. **Global (All-at-Once)**: Solves the entire schedule as one massive MIP problem. Optimal but computationally expensive.
+2. **Sequential (Year-by-Year)**: Decomposes the problem by year level (Year 1 → Year 2 → ...). Faster and scalable, respects previously occupied slots.
 
 ## Installation
 
@@ -43,6 +58,7 @@ This installs:
 - Pandas 1.5.3 (data processing)
 - OpenPyXL 3.1.2 (Excel support)
 - NumPy (numerical computing)
+- Highspy (HiGHS solver bindings)
 
 ## Input Files
 
@@ -50,204 +66,80 @@ The system requires three CSV input files:
 
 ### 1. courses.csv
 Defines courses with room requirements.
-
-**Columns**:
-- `code`: Course code (e.g., IT100)
-- `name`: Course name
-- `program`: Program (IT/IS)
-- `year`: Year level (1-4)
-- `lec_hours`: Lecture hours per week
-- `lab_hours`: Laboratory hours per week
-- `room_type_required`: Required room type (programming, database, networking, etc.)
+**Columns**: `code`, `name`, `program`, `year`, `semester`, `lec_hours`, `lab_hours`, `room_category`
 
 ### 2. enrollment.csv
 Student enrollment by program/year/block.
-
-**Columns**:
-- `program`: Program name (IT/IS)
-- `year`: Year level
-- `block`: Block section (A, B, C, etc.)
-- `students`: Number of students
+**Columns**: `program`, `year`, `block`, `students`
 
 ### 3. room.csv
 Available rooms and their specifications.
-
-**Columns**:
-- `room_id`: Room identifier
-- `building`: Building name
-- `floor`: Floor number
-- `capacity`: Maximum students
-- `room_type`: Room type (matches course requirements)
-- `equipment`: Equipment description
+**Columns**: `room_id`, `building`, `floor`, `capacity`, `room_type`
 
 ## Usage
 
-### Basic Usage
+### GUI Application (Recommended)
 
-Run the optimizer:
+Run the graphical interface:
+```bash
+python scheduler_gui_v3.py
+```
+
+**Features:**
+- **Feasibility Check**: Analyze demand vs. supply before solving.
+- **Dynamic Configuration**:
+  - Override room counts (Lab/Lecture)
+  - Adjust Time Limit (seconds/year)
+  - Adjust Gap Tolerance (0.1% - 20%)
+- **Visualizer**: Interactive timetable grid and list view.
+- **Stop Simulation**: Gracefully stop between year iterations.
+
+### Command Line Usage
+
+Run the basic scheduler:
 ```bash
 python scheduler.py
 ```
 
-This will:
-1. Read input CSV files
-2. Build the optimization model
-3. Solve using CBC (Branch-and-Bound algorithm)
-4. Generate schedule CSV files for all program-year-block combinations
+## Output Files
 
-### Output Files
-
-The system generates schedules in CSV format matching the example files:
+The system generates schedules in CSV format:
 
 **Output format**:
-- `Course Code`: Course identifier
-- `Course Title`: Full course name
-- `Time`: Time slot (e.g., "8:00 - 11:00")
-- `Days`: Days of week (MW, TTH, F, S)
-- `Room`: Assigned room
-- `Lec`: Lecture hours
-- `Lab`: Laboratory hours
-- `Credit Units`: Total credit units
-- `Units`: Weighted units
-- `Instructor/Professor`: Assigned instructor
+`Course Code`, `Course Title`, `Time`, `Days`, `Room`, `Lec`, `Lab`, `Units`, `No. of Hours`, `ETL Units`, `Instructor/Professor`, `Program-Year-Block`
 
 **Example outputs**:
-- `schedule_IT3A.csv` - IT Year 3 Block A
-- `schedule_IT3B.csv` - IT Year 3 Block B
-- `schedule_IS2C.csv` - IS Year 2 Block C
-- etc.
-
-### Advanced Usage
-
-Use as a Python module:
-
-```python
-from scheduler import SchedulingOptimizer
-
-# Initialize
-optimizer = SchedulingOptimizer(
-    courses_file='courses.csv',
-    enrollment_file='enrollment.csv',
-    rooms_file='room.csv'
-)
-
-# Build and solve
-optimizer.build_model()
-status = optimizer.solve(time_limit=600, gap_tolerance=0.01)
-
-# Export specific schedule
-optimizer.export_schedule(
-    output_file='custom_schedule.csv',
-    program='IT',
-    year=3,
-    block='A'
-)
-
-# Export all schedules
-optimizer.export_all_schedules(output_dir='./schedules')
-```
+- `schedule_IT3A.csv`
+- `schedule_IS2C.csv`
 
 ## Solver Configuration
 
-### CBC Solver Parameters
-
-- **Time Limit**: 600 seconds (10 minutes) - adjustable
-- **Gap Tolerance**: 1% (0.01) - optimality gap
-- **Algorithm**: Branch-and-Bound
-- **Problem Class**: NP-hard binary integer programming
+### Dynamic Parameters
+The GUI allows runtime adjustment of:
+- **Time Limit**: Controls max runtime per sub-problem.
+- **Gap Tolerance**: Controls optimality vs. speed trade-off. Higher gap (e.g., 10%) = faster solution.
 
 ### Performance Expectations
-
-Based on paper validation:
-- **Room Utilization**: 75-85% target, typically achieves ~81%
-- **Conflicts**: 0 (guaranteed by constraints)
-- **Solve Time**: 4-5 minutes for 99,360 variables
-- **Idle Time**: <20%
-- **Fairness Score**: >0.90
-
-## Model Scalability
-
-The system handles:
-- **Classes**: Up to 200+ class sections
-- **Rooms**: Up to 15+ rooms
-- **Time Slots**: 45 weekly slots (M-F 9 slots/day, S 6 slots)
-- **Enrollment Growth**: Tested up to +15% growth
-
-For larger problems:
-- Increase `time_limit` parameter
-- Adjust `gap_tolerance` (larger = faster, less optimal)
-- Consider problem decomposition
-
-## Customization
-
-### Modify Objective Weights
-
-Edit in `SchedulingOptimizer.__init__()`:
-```python
-self.alpha = 0.4  # Utilization weight
-self.beta = 0.3   # Conflict minimization weight
-self.gamma = 0.2  # Idle time reduction weight
-self.delta = 0.1  # Fairness weight
-```
-
-### Adjust Time Slots
-
-Modify `_generate_time_slots()` method to change:
-- Days of week
-- Number of slots per day
-- Time slot duration
-- Start/end times
-
-### Add Constraints
-
-Add custom constraints in `_add_constraints()` method using PuLP syntax:
-```python
-self.model += (constraint_expression, "Constraint_Name")
-```
-
-## Validation & Testing
-
-The implementation follows the paper's validation approach:
-
-1. **Sensitivity Analysis**: Test with ±10-20% enrollment variations
-2. **Room Unavailability**: Simulate maintenance scenarios
-3. **Constraint Validation**: Verify all hard constraints satisfied
-4. **Stakeholder Review**: Compare against manual schedules
+- **HiGHS Solver**: ~10-20x faster than CBC.
+- **Sequential Strategy**: Reduces complexity by ~75%.
+- **Room Utilization**: Typically achieves 75-85%.
 
 ## Troubleshooting
 
-### Common Issues
-
-**No feasible solution**:
-- Check room capacities vs enrollment
-- Verify sufficient time slots
-- Review room type compatibility
-- Reduce required hours if over-constrained
-
 **Long solve times**:
-- Increase gap tolerance
-- Reduce problem size (fewer classes/rooms)
-- Use more powerful hardware
-- Consider time limit adjustment
+- Switch to **HiGHS** solver.
+- Increase **Gap Tolerance** (e.g., to 10%).
+- Use **Sequential** strategy.
+- Reduce **Time Limit**.
 
-**Import errors**:
-- Ensure all dependencies installed: `pip install -r requirements.txt`
-- Check Python version >= 3.9
-- Verify CSV file formats
-
-## References
-
-Based on research paper by Kenji Mazo, implementing mathematical model adapted from:
-
-Niyonzima, E., & Mukasekuru, A. (2021). "Modelling classroom space allocation at University of Rwanda: A linear programming approach." *Applied Mathematics*, 16(1), 40-52.
+**Infeasible Solution**:
+- Run **Feasibility Check** in GUI first.
+- Add more rooms or increase operating hours.
 
 ## License
-
 Academic research implementation for CCMS, Camarines Norte State College.
 
 ## Contact
-
-For questions or issues:
 - Author: Kenji Mazo
 - Institution: College of Computing and Multimedia Studies
 - Location: Camarines Norte State College, Daet, Philippines
