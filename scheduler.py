@@ -61,6 +61,12 @@ class SchedulingOptimizer:
         else:
             self.enrollment_df = pd.read_csv(enrollment_file)
 
+        # Ensure year columns are integers to prevent float/int mismatch
+        if 'year' in self.courses_df.columns:
+            self.courses_df['year'] = pd.to_numeric(self.courses_df['year'], errors='coerce').fillna(0).astype(int)
+        if 'year' in self.enrollment_df.columns:
+            self.enrollment_df['year'] = pd.to_numeric(self.enrollment_df['year'], errors='coerce').fillna(0).astype(int)
+
         # Apply program filter if provided
         if program_filter:
             self.enrollment_df = self.enrollment_df[self.enrollment_df['program'].isin(program_filter)]
@@ -133,10 +139,17 @@ class SchedulingOptimizer:
         configs = []
 
         # --- Special Handling for Practicum ---
-        if code == 'IT 128':
-            # Treat as a 2-hour non-lab (lecture) class, ignoring the 486 lab hours
+        # Both IT 128 and IS 404 are practicum courses with 486 lab hours (off-campus internship)
+        # Treat them as a 2-hour non-lab (lecture) class for weekly check-ins
+        if code == 'IT 128' or code == 'IS 404':
             configs.append({'type': 'lecture', 'duration': 2, 'pattern': '2_days', 'meetings': 2})   # 1hr × 2 days
             configs.append({'type': 'lecture', 'duration': 4, 'pattern': 'single_day', 'meetings': 1}) # 2hr x 1 day
+            return configs
+
+        # --- Special Handling for PathFit courses ---
+        # PathFit is a 2-hour course that should be scheduled as a single 2-hour block once per week
+        if code.startswith('PathFit'):
+            configs.append({'type': 'lecture', 'duration': 4, 'pattern': 'single_day', 'meetings': 1})  # 2hr × 1 day
             return configs
 
         # --- LECTURE SESSIONS ---
@@ -330,6 +343,16 @@ class SchedulingOptimizer:
             end_slot_index = k + duration - 1
             if end_slot_index >= len(self.time_slots) or self.time_slots[end_slot_index]['day'] != day:
                 valid = False
+            
+            # --- LUNCH BREAK CHECK ---
+            # Prevent sessions from spanning across the lunch break (12:00-13:00)
+            # Morning slots end at 12:00, afternoon slots start at 13:00
+            # If session starts in morning (before 12:00) it must end by 12:00
+            if valid:
+                end_time = self.time_slots[end_slot_index]['end']
+                # Check if we're starting in morning but ending in afternoon
+                if start_time < '12:00' and end_time > '12:00':
+                    valid = False
 
             if valid:
                 valid_starts.append(k)
@@ -1341,56 +1364,60 @@ class SchedulingOptimizer:
         # Return groups with more than one session
         return [group for group in session_groups.values() if len(group) > 1]
 
-    def solve(self, time_limit: int = 600, gap_tolerance: float = 0.01):
+    def solve(self, time_limit: int = 600, gap_tolerance: float = 0.01, solver_name: str = 'PULP_CBC_CMD'):
         """
-        Solve the optimization problem using HiGHS solver with multi-threading.
+        Solve the optimization problem using the specified solver.
         
         Args:
             time_limit: Maximum solving time in seconds (default 600 = 10 min)
             gap_tolerance: Optimality gap tolerance (default 0.01 = 1%)
+            solver_name: Name of the solver to use (PULP_CBC_CMD, HiGHS_CMD, GLPK_CMD, COIN_CMD)
         """
-        if self.model is None:
-            raise ValueError("Model not built. Call build_model() first.")
-
-        # Generate a warm start solution using a greedy heuristic
-        warm_start_solution = self._generate_initial_solution()
-        for p_id, val in warm_start_solution['Y'].items():
-            if self.Y.get(p_id):
-                self.Y[p_id].setInitialValue(val)
-        for (i, j, k), val in warm_start_solution['X'].items():
-            if self.X.get((i, j, k)):
-                self.X[(i, j, k)].setInitialValue(val)
-        
         print(f"\nSolving optimization problem...")
-        print(f"  Solver: HiGHS (Python Interface)")
+        
+        # --- Configure Solver ---
+        solver = None
+        if solver_name == 'HiGHS_CMD':
+            # Try to use HiGHS via Python API (highspy package)
+            try:
+                # Use HiGHS (Python API) instead of HiGHS_CMD (command line)
+                solver = pl.HiGHS(msg=True, timeLimit=time_limit, gapRel=gap_tolerance, threads=8)
+            except Exception as e:
+                print(f"  HiGHS not available ({e}), falling back to CBC")
+                solver = pl.PULP_CBC_CMD(msg=True, timeLimit=time_limit, gapRel=gap_tolerance)
+        elif solver_name == 'GLPK_CMD':
+            solver = pl.GLPK_CMD(msg=True, timeLimit=time_limit)
+        elif solver_name == 'COIN_CMD':
+             solver = pl.COIN_CMD(msg=True, timeLimit=time_limit, gapRel=gap_tolerance)
+        else:
+            # Default to CBC (Coin-OR Branch and Cut) which comes with PuLP
+            solver = pl.PULP_CBC_CMD(msg=True, timeLimit=time_limit, gapRel=gap_tolerance)
+
+        print(f"  Solver: {solver_name}")
         print(f"  Time limit: {time_limit} seconds")
-        print(f"  Gap tolerance: {gap_tolerance * 100}%")
-        print(f"  Threads: {os.cpu_count()}")
+        print(f"  Gap tolerance: {gap_tolerance:.1%}")
         
-        # Use HiGHS Python interface (built into PuLP)
-        solver = pl.HiGHS(
-            timeLimit=time_limit,
-            gapRel=gap_tolerance,
-            threads=os.cpu_count()
-        )
+        # --- Heuristic for Warm Start ---
+        print("  Generating initial solution with greedy heuristic...")
+        self._generate_initial_solution()
         
-        # Solve
         start_time = datetime.now()
         status = self.model.solve(solver)
-        end_time = datetime.now()
-        
-        solve_time = (end_time - start_time).total_seconds()
-        
-        # Report results
-        print(f"\n{'='*60}")
-        print(f"OPTIMIZATION RESULTS")
+        solve_time = (datetime.now() - start_time).total_seconds()
+
+        print(f"\nOPTIMIZATION RESULTS")
         print(f"{'='*60}")
         print(f"Status: {pl.LpStatus[status]}")
         print(f"Solve time: {solve_time:.2f} seconds ({solve_time/60:.2f} minutes)")
         
-        if status == pl.LpStatusOptimal or status == pl.LpStatusNotSolved:
-            print(f"Objective value: {pl.value(self.model.objective):.4f}")
-            self._print_performance_metrics()
+        if status == pl.LpStatusOptimal or status == pl.LpStatusNotSolved: # NotSolved might have a feasible solution found
+            # Check if we actually have an objective value
+            obj_val = pl.value(self.model.objective)
+            if obj_val is not None:
+                print(f"Objective value: {obj_val:.4f}")
+                self._print_performance_metrics()
+            else:
+                 print("No integer solution found.")
         else:
             print("No feasible solution found!")
         
@@ -1453,8 +1480,12 @@ class SchedulingOptimizer:
         schedule_data = []
         for comp_id, schedule in component_schedules.items():
             component = schedule['component']
+            # Convert years to int for comparison to handle float/int mismatch
+            comp_year = int(component['year']) if pd.notna(component['year']) else None
+            target_year = int(year) if year is not None and pd.notna(year) else None
+            
             if (program and component['program'] != program) or \
-               (year and component['year'] != year) or \
+               (target_year is not None and comp_year != target_year) or \
                (block and component['block'] != block):
                 continue
 
@@ -1494,8 +1525,10 @@ class SchedulingOptimizer:
                 'Instructor/Professor': 'TBA'
             })
 
-        schedule_df = pd.DataFrame(schedule_data).sort_values(by=['Course Code'])
-        if save_file:
+        schedule_df = pd.DataFrame(schedule_data)
+        if not schedule_df.empty:
+            schedule_df = schedule_df.sort_values(by=['Course Code'])
+        if save_file and not schedule_df.empty:
             schedule_df.to_csv(filename, index=False)
             print(f"  Schedule for {program} {year}{block} exported to {filename}")
         

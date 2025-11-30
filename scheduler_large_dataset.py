@@ -20,7 +20,7 @@ import os
 
 
 def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str, 
-                       semester: int = 1, output_dir: str = "schedules"):
+                       semester: int = 1, output_dir: str = "schedules", time_limit: int = 600, solver: str = "PULP_CBC_CMD"):
     """
     Solve large scheduling problem using year-by-year decomposition.
     
@@ -30,14 +30,26 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
     print(f"\n{'='*70}")
     print(f"LARGE DATASET SCHEDULER - SEMESTER {semester}")
     print(f"Decomposition Strategy: Year-by-Year Sequential Solving")
+    print(f"Time Limit per Year: {time_limit}s")
+    print(f"Solver: {solver}")
     print(f"{'='*70}\n")
     
     # Load data to check size
     enrollment_df = pd.read_csv(enrollment_file)
     courses_df = pd.read_csv(courses_file)
     
+    # Ensure year column is integer and filter out any NaN values
+    enrollment_df['year'] = pd.to_numeric(enrollment_df['year'], errors='coerce')
+    enrollment_df = enrollment_df.dropna(subset=['year'])
+    enrollment_df['year'] = enrollment_df['year'].astype(int)
+    
+    courses_df['year'] = pd.to_numeric(courses_df['year'], errors='coerce')
+    courses_df = courses_df.dropna(subset=['year'])
+    courses_df['year'] = courses_df['year'].astype(int)
+    
     years = sorted(enrollment_df['year'].unique())
     print(f"Dataset: {len(courses_df)} courses, {len(enrollment_df)} groups, {len(years)} year levels")
+    print(f"Year levels to process: {years}")
     print(f"Strategy: Solve each year separately to reduce problem size\n")
     
     occupied_room_slots = set()  # Track occupied (room_idx, slot) across years
@@ -53,7 +65,7 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
         
         # Filter enrollment for this year
         year_enrollment = enrollment_df[enrollment_df['year'] == year]
-        year_enrollment_file = f"temp_enrollment_year{year}.csv"
+        year_enrollment_file = f"temp_enrollment_year{int(year)}.csv"
         year_enrollment.to_csv(year_enrollment_file, index=False)
         
         # Create optimizer
@@ -76,8 +88,8 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
             add_occupation_constraints(optimizer, occupied_room_slots)
         
         # Solve
-        print(f"\nSolving Year {year} (max 5 minutes)...")
-        status = optimizer.solve(time_limit=300, gap_tolerance=0.10)
+        print(f"\nSolving Year {year} (max {time_limit} seconds)...")
+        status = optimizer.solve(time_limit=time_limit, gap_tolerance=0.10, solver_name=solver)
         
         if status == pl.LpStatusOptimal or pl.value(optimizer.model.objective) > 0:
             print(f"✓ Year {year} scheduled successfully!")
@@ -109,7 +121,9 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
     for year, optimizer in all_solutions.items():
         year_enrollment = enrollment_df[enrollment_df['year'] == year]
         for _, enroll in year_enrollment.iterrows():
-            program, yr, block = enroll['program'], enroll['year'], enroll['block']
+            program = enroll['program']
+            yr = int(enroll['year'])  # Ensure integer
+            block = enroll['block']
             filename = f"schedule_{program}{yr}{block}.csv"
             filepath = os.path.join(final_output_dir, filename)
             optimizer.export_schedule(filepath, program, yr, block)
