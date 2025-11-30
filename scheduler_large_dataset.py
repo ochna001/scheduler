@@ -20,17 +20,23 @@ import os
 
 
 def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str, 
-                       semester: int = 1, output_dir: str = "schedules", time_limit: int = 600, solver: str = "PULP_CBC_CMD"):
+                       semester: int = 1, output_dir: str = "schedules", time_limit: int = 600, 
+                       gap_tolerance: float = 0.05, solver: str = "PULP_CBC_CMD", stop_check=None):
     """
     Solve large scheduling problem using year-by-year decomposition.
     
     This function breaks down the problem by year level and solves sequentially,
     dramatically reducing computational complexity.
+    
+    Args:
+        gap_tolerance: Optimality gap tolerance (default 0.05 = 5%)
+        stop_check: Optional callback function that returns True if simulation should stop
     """
     print(f"\n{'='*70}")
     print(f"LARGE DATASET SCHEDULER - SEMESTER {semester}")
     print(f"Decomposition Strategy: Year-by-Year Sequential Solving")
     print(f"Time Limit per Year: {time_limit}s")
+    print(f"Gap Tolerance: {gap_tolerance:.1%}")
     print(f"Solver: {solver}")
     print(f"{'='*70}\n")
     
@@ -56,6 +62,11 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
     all_solutions = {}
     
     for year in years:
+        # Check if stop was requested
+        if stop_check and stop_check():
+            print(f"\n⚠️ Stop requested by user. Stopping after {len(all_solutions)} year(s).")
+            break
+            
         print(f"\n{'='*70}")
         print(f"PROCESSING YEAR {year}")
         print(f"{'='*70}")
@@ -89,7 +100,7 @@ def solve_large_dataset(courses_file: str, enrollment_file: str, rooms_file: str
         
         # Solve
         print(f"\nSolving Year {year} (max {time_limit} seconds)...")
-        status = optimizer.solve(time_limit=time_limit, gap_tolerance=0.10, solver_name=solver)
+        status = optimizer.solve(time_limit=time_limit, gap_tolerance=gap_tolerance, solver_name=solver)
         
         if status == pl.LpStatusOptimal or pl.value(optimizer.model.objective) > 0:
             print(f"✓ Year {year} scheduled successfully!")

@@ -53,6 +53,7 @@ class SchedulerGUI:
         # Timer variables
         self.timer_running = False
         self.timer_start = None
+        self.simulation_stopped = False  # Flag to stop simulation between years
 
         # Layout
         self.create_widgets()
@@ -162,12 +163,19 @@ class SchedulerGUI:
         self.btn_run = ttk.Button(left_panel, text="2. Run Simulation", command=self.start_simulation_thread, width=25, state="disabled")
         self.btn_run.pack(pady=5)
         
+        self.btn_stop = ttk.Button(left_panel, text="⏹ Stop Simulation", command=self.stop_simulation, width=25, state="disabled")
+        self.btn_stop.pack(pady=5)
+        
         # Timer display
         timer_frame = ttk.Frame(left_panel)
         timer_frame.pack(fill=tk.X, pady=10)
         ttk.Label(timer_frame, text="⏱ Elapsed:").pack(side=tk.LEFT)
         self.timer_label = ttk.Label(timer_frame, text="00:00:00", font=("Consolas", 12, "bold"))
         self.timer_label.pack(side=tk.LEFT, padx=5)
+        
+        # Status indicator
+        self.status_label = ttk.Label(timer_frame, text="", font=("Segoe UI", 9))
+        self.status_label.pack(side=tk.RIGHT)
         
         # Load Results button
         ttk.Separator(left_panel, orient='horizontal').pack(fill='x', pady=10)
@@ -462,12 +470,22 @@ class SchedulerGUI:
     def start_simulation_thread(self):
         self.btn_run.configure(state="disabled")
         self.btn_check.configure(state="disabled")
+        self.btn_stop.configure(state="normal")
+        self.simulation_stopped = False
+        self.status_label.config(text="Running...", foreground="green")
         # Start timer
         self.timer_running = True
         self.timer_start = time.time()
         self.update_timer()
         t = threading.Thread(target=self.run_simulation)
         t.start()
+
+    def stop_simulation(self):
+        """Stop the simulation after the current year completes."""
+        self.simulation_stopped = True
+        self.status_label.config(text="Stopping...", foreground="orange")
+        self.print_log("\n⚠️ Stop requested. Will stop after current year completes...", "warning")
+        self.btn_stop.configure(state="disabled")
 
     def update_timer(self):
         """Update the timer label every second."""
@@ -526,7 +544,7 @@ class SchedulerGUI:
                      self.print_log("❌ No feasible solution found in time limit.", "stderr")
 
             else:
-                # Sequential Strategy
+                # Sequential Strategy - pass stop check callback
                 all_solutions = solve_large_dataset(
                     courses_file=courses_path,
                     enrollment_file=enrollment_path,
@@ -534,8 +552,14 @@ class SchedulerGUI:
                     semester=semester,
                     output_dir=output_dir,
                     time_limit=time_limit,
-                    solver=solver_name
+                    gap_tolerance=gap_tolerance,
+                    solver=solver_name,
+                    stop_check=lambda: self.simulation_stopped
                 )
+                
+                if self.simulation_stopped:
+                    self.print_log(f"\n⚠️ Simulation stopped by user.", "warning")
+                    return
             
             self.print_log(f"\n✅ Simulation Complete!", "success")
             self.load_results_from_folder(output_dir)
@@ -556,6 +580,11 @@ class SchedulerGUI:
             self.print_log(f"\n⏱ Total time: {elapsed/60:.2f} minutes ({elapsed:.1f} seconds)")
             self.btn_run.configure(state="normal")
             self.btn_check.configure(state="normal")
+            self.btn_stop.configure(state="disabled")
+            if self.simulation_stopped:
+                self.status_label.config(text="Stopped", foreground="red")
+            else:
+                self.status_label.config(text="Complete", foreground="green")
 
     def load_results_from_folder(self, folder_path=None):
         """Load all CSV schedules from a folder and visualize them."""
