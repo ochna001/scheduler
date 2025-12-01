@@ -51,7 +51,7 @@ In this paper, a binary integer linear programming model adapted from optimizati
 
 This paper addresses the gap identified by Aygül et al. \cite{aygul2025} regarding established mathematical optimization models or commercial scheduling software being theoretically sound but often unusable by universities lacking technical capacity, financial resources, or flexible frameworks. Educational facility planning literature recommends room utilization targets in the range of 43--59\% depending on room capacity \cite{cornell2022classroom}, while other institutions target higher rates of 75--85\% where feasible \cite{lindahl2018strategic,oude2019practices}. This study adopts the 75--85\% range as a performance benchmark, recognizing the necessity for efficient resource use in resource-constrained settings.
 
-The output of this paper includes: (1) a mathematical formulation that fulfills requirements in accordance with CCMS and common Philippine HEI scheduling constraints; (2) a dynamic model design that can adapt to changes in parameters such as student counts, course offerings, and room availability through CSV-based inputs; and (3) validation using real curriculum data from the 27-course IT program of CCMS as a base reference.
+The key contributions of this paper include: (1) a mathematical formulation that fulfills requirements in accordance with CCMS and common Philippine HEI scheduling constraints, including strict room category separation and session-based scheduling; (2) a dynamic model design that can adapt to changes in parameters such as student enrollment, course offerings, and room availability through CSV-based inputs without code modifications; and (3) validation using real curriculum data from CCMS covering both IT and IS programs across all four year levels, demonstrating the model's scalability and practical applicability to Philippine higher education institutions.
 
 \section{Literature Review}
 
@@ -59,7 +59,7 @@ The classroom scheduling problem has been widely studied in operations research,
 
 \textbf{Timetabling Optimization Methods}
 
-Tan et al. \cite{tan2021} reviewed 47 timetabling studies and found binary integer programming (BIP) effective for problems with moderate numbers of decision variables, supporting the feasibility of our 99,360-variable model for practical implementation.
+Tan et al. \cite{tan2021} reviewed 47 timetabling studies and found binary integer programming (BIP) effective for problems with moderate numbers of decision variables, supporting the feasibility of our approach which involves approximately 75,000 binary variables per year level when using sequential decomposition.
 
 Ceschia et al. \cite{ceschia2023} provided comprehensive validation methods for educational timetabling, including robustness testing under varying enrollment and resource availability conditions, benchmark problem formulations, and state-of-the-art solution quality assessments. Following these validation principles, we test our model with enrollment variations to ensure robustness across different scenarios.
 
@@ -341,11 +341,11 @@ This flexibility allows administrators to perform ``what-if'' analysis, such as 
 
 \section{Conclusion and Future Work}
 
-This study developed and implemented a binary integer linear programming model to optimize the classroom space allocation at CCMS, effectively addressing the challenges brought about by rapid enrollment growth and limited laboratory facilities. The model, which involves over 650,000 binary variables, was implemented using Python and the HiGHS solver, providing a practical solution that achieves high room utilization rates while guaranteeing zero scheduling conflicts.
+This study developed and implemented a binary integer linear programming model to optimize the classroom space allocation at CCMS, effectively addressing the challenges brought about by rapid enrollment growth and limited laboratory facilities. The model employs a sequential decomposition strategy wherein each academic year is solved separately, involving approximately 75,000 binary variables per sub-problem. Implementation using Python and the HiGHS 1.12.0 solver provides a practical solution that achieves high room utilization rates while guaranteeing zero scheduling conflicts.
 
 Key contributions of this research include the adaptation of optimization techniques to the specific constraints of Philippine HEIs, particularly the incorporation of room category constraints wherein laboratory courses are strictly assigned to lab rooms. Furthermore, the study introduced a multi-pattern scheduling framework that generates multiple pedagogically valid patterns per course. Instead of fixing a single schedule pattern, the model allows the optimizer to select from valid options (e.g., 1.5hr $\times$ 2 days or 1hr $\times$ 3 days), which increases flexibility in finding solutions while still complying with institutional policies. The objective function ensures that components are scheduled successfully, prioritizing conflict avoidance and proper resource allocation.
 
-Validation using real curriculum data from the IT program of CCMS demonstrated the model's capability to handle complex requirements, such as the 8:00 AM to 5:00 PM schedule window and the mandatory lunch break. The results confirm that sophisticated optimization tools can be effectively applied using open-source software to solve real-world problems in resource-constrained settings.
+Validation using real curriculum data from both IT and IS programs of CCMS demonstrated the model's capability to handle complex requirements across all four year levels, including the 8:00 AM to 5:00 PM schedule window and the mandatory lunch break. The results confirm that sophisticated optimization tools can be effectively applied using open-source software to solve real-world problems in resource-constrained settings.
 
 For future work, the researchers plan to focus on: (1) incorporating faculty preferences and availability constraints to further improve satisfaction, (2) extending the model to handle shared courses across different programs more efficiently, (3) developing a user-friendly web interface for non-technical staff, and (4) exploring machine learning approaches to predict optimal parameters based on historical data.
 

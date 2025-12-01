@@ -1,26 +1,26 @@
 Course Code,Course Title,Time,Days,Room,Lec,Lab,Units,No. of Hours,ETL Units,Instructor/Professor,Program-Year-Block
-GEC 9,Ang Buhay at mga Akda ni Rizal,"08:00-09:30
-08:00-09:30",TW,"LEC-008 (Non-lab)
-LEC-008 (Non-lab)",3,0,3,3,3.0,TBA,IT-3C
-IT 114,Quantitative Methods (Modeling and Simulation),10:00-12:00,T,LEC-005 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
+GEC 9,Ang Buhay at mga Akda ni Rizal,"14:30-16:00
+14:30-16:00",TW,"LEC-009 (Non-lab)
+LEC-009 (Non-lab)",3,0,3,3,3.0,TBA,IT-3C
+IT 114,Quantitative Methods (Modeling and Simulation),15:00-17:00,F,LEC-008 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
 IT 114,Quantitative Methods (Modeling and Simulation),"13:00-14:30
-13:00-14:30",TF,"LAB-006 (Lab)
-LAB-006 (Lab)",2,1,3,5,4.25,TBA,IT-3C
-IT 115,Networking 1,11:00-14:00,M,LEC-005 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
+13:00-14:30",MF,"LAB-004 (Lab)
+LAB-004 (Lab)",2,1,3,5,4.25,TBA,IT-3C
+IT 115,Networking 1,10:00-12:00,F,LEC-008 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
 IT 115,Networking 1,"09:30-11:00
-09:30-11:00",MTH,"LAB-006 (Lab)
-LAB-006 (Lab)",2,1,3,5,4.25,TBA,IT-3C
-IT 116,Systems Analysis and Design,10:00-12:00,W,LEC-007 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
+09:30-11:00",MW,"LAB-004 (Lab)
+LAB-004 (Lab)",2,1,3,5,4.25,TBA,IT-3C
+IT 116,Systems Analysis and Design,10:00-12:00,TH,LEC-004 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
 IT 116,Systems Analysis and Design,"08:00-09:30
-08:00-09:30",MF,"LAB-003 (Lab)
+08:00-09:30",TF,"LAB-003 (Lab)
 LAB-003 (Lab)",2,1,3,5,4.25,TBA,IT-3C
-IT 117,Systems Administration and Maintenance,15:00-17:00,TH,LEC-009 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
+IT 117,Systems Administration and Maintenance,10:00-12:00,T,LEC-009 (Non-lab),2,1,3,5,4.25,TBA,IT-3C
 IT 117,Systems Administration and Maintenance,"13:00-14:30
-13:00-14:30",WTH,"LAB-001 (Lab)
-LAB-001 (Lab)",2,1,3,5,4.25,TBA,IT-3C
+13:00-14:30",TTH,"LAB-005 (Lab)
+LAB-005 (Lab)",2,1,3,5,4.25,TBA,IT-3C
 IT 118,Internet of Things,"14:30-16:00
-14:30-16:00",TW,"LEC-006 (Non-lab)
-LEC-006 (Non-lab)",3,0,3,3,3.0,TBA,IT-3C
-IT 119,Data Scalability and Analytics,"14:30-16:00
-14:30-16:00",MF,"LEC-011 (Non-lab)
+14:30-16:00",MTH,"LEC-011 (Non-lab)
 LEC-011 (Non-lab)",3,0,3,3,3.0,TBA,IT-3C
+IT 119,Data Scalability and Analytics,"08:00-09:30
+08:00-09:30",WTH,"LEC-002 (Non-lab)
+LEC-002 (Non-lab)",3,0,3,3,3.0,TBA,IT-3C

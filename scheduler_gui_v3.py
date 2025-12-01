@@ -11,6 +11,8 @@ from datetime import datetime
 # Import the logic from the existing scripts
 from scheduler import SchedulingOptimizer
 from scheduler_large_dataset import solve_large_dataset
+from scheduler_ortools import OrToolsScheduler
+from ortools.sat.python import cp_model
 
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
@@ -144,7 +146,7 @@ class SchedulerGUI:
         # Solver Selection
         ttk.Label(left_panel, text="Solver:").pack(anchor="w", pady=(5,0))
         solver_combo = ttk.Combobox(left_panel, textvariable=self.solver_var, state="readonly")
-        solver_combo['values'] = ("PULP_CBC_CMD", "HiGHS_CMD", "GLPK_CMD", "COIN_CMD")
+        solver_combo['values'] = ("PULP_CBC_CMD", "HiGHS_CMD", "GLPK_CMD", "COIN_CMD", "OR_TOOLS_CP_SAT")
         solver_combo.pack(fill=tk.X)
 
         # Strategy Selection
@@ -524,7 +526,53 @@ class SchedulerGUI:
             self.print_log(f"Strategy: {strategy}")
             self.print_log(f"Solver: {solver_name} | Time Limit: {time_limit}s | Gap Tolerance: {gap_tolerance:.1%}")
             
-            if strategy == "Global (All-at-Once)":
+            # --- OR-Tools CP-SAT Solver ---
+            if solver_name == "OR_TOOLS_CP_SAT":
+                self.print_log("Running OR-Tools CP-SAT solver (global, fast)...")
+                ort_scheduler = OrToolsScheduler(
+                    courses_file=courses_path,
+                    enrollment_file=enrollment_path,
+                    rooms_file=rooms_path,
+                    semester=semester,
+                )
+                self.print_log("Building CP-SAT model...")
+                ort_scheduler.build_model()
+                
+                self.print_log(f"Solving CP-SAT model (max {time_limit}s)...")
+                solver, status = ort_scheduler.solve(time_limit=time_limit)
+                
+                if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+                    self.print_log("✓ Optimal/Feasible solution found!")
+                    df = ort_scheduler.extract_schedule(solver)
+                    
+                    # Export in same format as PuLP scheduler
+                    if semester == 1:
+                        folder_name = "1st_Sem_Schedule"
+                    elif semester == 2:
+                        folder_name = "2nd_Sem_Schedule"
+                    else:
+                        folder_name = "Generated_Schedules"
+                    
+                    final_output_dir = os.path.join(output_dir, folder_name)
+                    os.makedirs(final_output_dir, exist_ok=True)
+                    
+                    # Per Program-Year-Block files
+                    if "Program-Year-Block" in df.columns:
+                        for group in sorted(df["Program-Year-Block"].dropna().unique()):
+                            group_df = df[df["Program-Year-Block"] == group]
+                            filename = os.path.join(final_output_dir, f"schedule_{group}.csv")
+                            group_df.to_csv(filename, index=False)
+                            self.print_log(f"  Schedule for {group} exported.")
+                    
+                    # Combined file
+                    combined_filename = os.path.join(final_output_dir, "_schedule_ALL.csv")
+                    df.to_csv(combined_filename, index=False)
+                    self.print_log(f"  Combined schedule exported to {combined_filename}")
+                else:
+                    self.print_log("❌ No feasible solution found by OR-Tools.", "stderr")
+
+            # --- PuLP-based Solvers ---
+            elif strategy == "Global (All-at-Once)":
                 self.print_log("Running global optimization (this may take a while)...")
                 optimizer = SchedulingOptimizer(
                     courses_file=courses_path,
@@ -617,6 +665,8 @@ class SchedulerGUI:
                     
                     # Add to internal list using the correct column names from the CSV
                     for _, row in df.iterrows():
+                        # Prefer Program-Year-Block from the file (e.g., OR-Tools combined output)
+                        row_block = row.get('Program-Year-Block', program_year_block)
                         self.schedules_data.append({
                             'Course Code': row.get('Course Code', ''),
                             'Course Title': row.get('Course Title', ''),
@@ -629,7 +679,7 @@ class SchedulerGUI:
                             'No. of Hours': row.get('No. of Hours', 0),
                             'ETL Units': row.get('ETL Units', 0),
                             'Instructor/Professor': row.get('Instructor/Professor', 'TBA'),
-                            'Program-Year-Block': program_year_block
+                            'Program-Year-Block': row_block
                         })
                 except Exception as e:
                     self.print_log(f"Error loading {f}: {e}", "stderr")
