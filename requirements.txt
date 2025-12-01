@@ -14,3 +14,6 @@ highspy>=1.5.0
 
 # OR-Tools CP-SAT solver (fast constraint programming solver)
 ortools>=9.8
+
+#python -m pip install -r requirements.txt
+#pip install -r requirements.txt
