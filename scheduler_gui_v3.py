@@ -518,11 +518,24 @@ class SchedulerGUI:
             solver_name = self.solver_var.get()
             strategy = self.strategy_var.get()
             
-            output_dir = f"output_gui_sim_sem{semester}"
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
+            # Generate descriptive output folder name
+            # Format: Output_Sem{semester}_{solver}_{strategy_short}_{timelimit}s_{gap}pct_{timestamp}
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            strategy_short = "Seq" if "Sequential" in strategy else "Global"
+            if solver_name == "OR_TOOLS_CP_SAT":
+                strategy_short = "CPSAT"  # OR-Tools is always global
+            gap_pct = int(self.gap_tolerance_var.get())
+            
+            # Get dataset name from enrollment file
+            enrollment_name = os.path.basename(enrollment_path).replace(".csv", "").replace("enrollment_", "")
+            if not enrollment_name:
+                enrollment_name = "custom"
+            
+            output_dir = f"Output_Sem{semester}_{enrollment_name}_{solver_name}_{strategy_short}_{time_limit}s_{gap_pct}pct_{timestamp}"
+            os.makedirs(output_dir, exist_ok=True)
                 
             self.print_log(f"\n--- STARTING SIMULATION ---", "warning")
+            self.print_log(f"Output folder: {output_dir}")
             self.print_log(f"Strategy: {strategy}")
             self.print_log(f"Solver: {solver_name} | Time Limit: {time_limit}s | Gap Tolerance: {gap_tolerance:.1%}")
             

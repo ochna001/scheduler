@@ -386,6 +386,63 @@ class OrToolsScheduler:
             if len(vars_at_slot) > 1:
                 self.model.Add(sum(vars_at_slot) <= 1)
 
+        # 5. Different Day Constraint: sessions in same pattern must be on different days
+        # 6. Same Room Constraint: sessions in same pattern must use the same room
+        # 7. Same Time-of-Day Constraint: sessions in same pattern should start at same time
+        for pat in self.patterns:
+            sessions_in_pattern = [s for s in self.sessions if s.pattern_id == pat["id"]]
+            if len(sessions_in_pattern) > 1:
+                s1 = sessions_in_pattern[0]
+                for s2 in sessions_in_pattern[1:]:
+                    # Different Day: for each day, at most one of s1 or s2 can be scheduled
+                    for day_idx, day in enumerate(self.days):
+                        day_start = day_idx * self.time_slots_per_day
+                        day_end = (day_idx + 1) * self.time_slots_per_day
+                        
+                        s1_on_day = []
+                        s2_on_day = []
+                        for j in range(len(self.rooms)):
+                            for k in self.valid_starts.get(s1.id, []):
+                                if day_start <= k < day_end:
+                                    v = self.X.get((s1.id, j, k))
+                                    if v is not None:
+                                        s1_on_day.append(v)
+                            for k in self.valid_starts.get(s2.id, []):
+                                if day_start <= k < day_end:
+                                    v = self.X.get((s2.id, j, k))
+                                    if v is not None:
+                                        s2_on_day.append(v)
+                        
+                        if s1_on_day and s2_on_day:
+                            self.model.Add(sum(s1_on_day) + sum(s2_on_day) <= 1)
+                    
+                    # Same Room: if s1 is in room j, s2 must also be in room j
+                    for j in range(len(self.rooms)):
+                        s1_in_room_j = [self.X.get((s1.id, j, k)) for k in self.valid_starts.get(s1.id, []) if self.X.get((s1.id, j, k)) is not None]
+                        s2_in_room_j = [self.X.get((s2.id, j, k)) for k in self.valid_starts.get(s2.id, []) if self.X.get((s2.id, j, k)) is not None]
+                        
+                        if s1_in_room_j and s2_in_room_j:
+                            self.model.Add(sum(s1_in_room_j) == sum(s2_in_room_j))
+                    
+                    # Same Time-of-Day: s1 and s2 should start at the same time slot within their day
+                    for t in range(self.time_slots_per_day):
+                        s1_at_time_t = []
+                        s2_at_time_t = []
+                        for j in range(len(self.rooms)):
+                            for k in self.valid_starts.get(s1.id, []):
+                                if k % self.time_slots_per_day == t:
+                                    v = self.X.get((s1.id, j, k))
+                                    if v is not None:
+                                        s1_at_time_t.append(v)
+                            for k in self.valid_starts.get(s2.id, []):
+                                if k % self.time_slots_per_day == t:
+                                    v = self.X.get((s2.id, j, k))
+                                    if v is not None:
+                                        s2_at_time_t.append(v)
+                        
+                        if s1_at_time_t and s2_at_time_t:
+                            self.model.Add(sum(s1_at_time_t) == sum(s2_at_time_t))
+
         # Objective: maximize number of chosen patterns (scheduled components)
         self.model.Maximize(sum(self.Y.values()))
 
