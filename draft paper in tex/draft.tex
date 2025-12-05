@@ -9,12 +9,16 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \usepackage{url}
 \begin{document}
 
-\title{Modelling and Simulating Classroom Space Allocation in CCMS New Building and Old Laboratory: A Binary Integer Linear Programming Approach}
+\title{Optimizing Classroom Space Allocation Using MILP and Constraint Programming: A Comparative Study of Open-Source Solvers for University Timetabling}
 
 \author{\IEEEauthorblockN{Mazo, Kenji U.}
 \IEEEauthorblockA{\textit{College of Computing and Multimedia Studies} \\
@@ -32,26 +36,26 @@ email@example.com}
 \maketitle
 
 \begin{abstract}
-This study presents a binary integer linear programming model designed to optimize classroom space allocation at the College of Computing and Multimedia Studies (CCMS). Addressing the challenges of inefficient resource utilization and scheduling conflicts caused by a 15\% annual enrollment growth against limited facilities, the research formulates the problem using a session-based scheduling system with strict room category constraints. This approach allows for the flexible scheduling of laboratory, lecture, and general education courses according to specific weekly patterns. To manage computational complexity, the study employs a sequential decomposition strategy wherein the schedule is solved year-by-year. The resulting model for a single academic year involves approximately 75,000 binary variables, which is solvable on standard hardware using the HiGHS 1.12.0 solver. Key features include room category constraints that strictly assign laboratory courses to lab rooms while permitting non-lab courses to utilize any available space, alongside a parameterized lab hour distribution (1 lab credit = 3 contact hours) and an 8:00 AM to 5:00 PM schedule with a mandatory lunch break. The multi-objective function is designed to balance utilization, minimize conflicts, reduce idle time, and ensure fairness. Initial feasibility testing using the complete dataset (91 courses, 17 student groups, 17 rooms) demonstrated the validity of potential schedules, achieving 64.1\% lecture and 52.5\% lab utilization. These results confirm that the current infrastructure is capable of accommodating the projected academic load when optimized effectively.
+This study presents an optimization model for university classroom allocation, comparing free and open-source solvers as alternatives to commercial software. Addressing the challenges of the College of Computing and Multimedia Studies (CCMS) at Camarines Norte State College, the research formulates the timetabling problem using a session-based scheduling system with strict room category constraints. The system implements a full \textbf{2 strategies $\times$ 3 solvers} matrix: Program-by-Program Sequential and Global strategies combined with CBC (MILP), HiGHS (MILP), and OR-Tools CP-SAT (Constraint Programming). This design allows direct comparison between MILP and CP approaches. The Program-by-Program strategy achieves optimal solutions in 35--68 seconds across all solvers, while the Global strategy with OR-Tools CP-SAT solves the full problem in 37 seconds. The model handles approximately 300,000 binary variables for a dataset of 18 student blocks, 50+ courses, and 17 rooms. A GUI-based tool allows administrators to configure parameters for capacity planning. Feasibility analysis confirms sufficient resources with 64\% lecture and 52\% lab utilization. Results demonstrate that open-source solvers can effectively handle real-world timetabling in resource-constrained institutions.
 \end{abstract}
 
 \begin{IEEEkeywords}
-classroom scheduling, binary integer programming, optimization, resource allocation, higher education, Philippine universities
+classroom scheduling, binary integer programming, constraint programming, open-source solvers, optimization, resource allocation, higher education, Philippine universities
 \end{IEEEkeywords}
 
 \section{Introduction}
 
 The efficient allocation of classroom resources has become one of the critical challenges for higher education institutions (HEIs) in developing countries, particularly in the Philippines where rapid enrollment growth outpaces infrastructure development. The College of Computing and Multimedia Studies (CCMS) at Camarines Norte State College exemplifies this problem, experiencing a 15\% annual enrollment growth while operating with limited laboratory facilities—specifically, only nine rooms in the new three-floor building and three laboratories in the old building.
 
-Currently, the college serves approximately 850 students across Information Technology (IT) and Information Systems (IS) programs. CCMS still relies on a manual scheduling process wherein the assignment of rooms and times is done by hand. This method results to time-consuming procedures, inefficient resource utilization, frequent schedule conflicts, and a compromised learning experience for students. Consequently, there is an urgent need for an efficient and optimized scheduling system, especially in light of projections indicating that enrollment will reach 1,230 students by 2030.
+Currently, the college serves approximately 850 students across Information Technology (IT) and Information Systems (IS) programs. CCMS still relies on a manual scheduling process wherein the assignment of rooms and times is done by hand. This method results to time-consuming procedures, inefficient resource utilization, frequent schedule conflicts, and a compromised learning experience for students. Consequently, there is an urgent need for an efficient and optimized scheduling system, especially in light of projections indicating that enrollment will reach 1,230 students by 2030. This aligns with broader efforts to digitize management systems in Philippine HEIs to enhance performance and efficiency \cite{spms2025}.
 
 Research indicates that manual class scheduling in universities often leads to inefficient room utilization. Austero et al. \cite{austero2022optimizing} demonstrated in their study at Bicol University and Caraga State University that optimization using a Heuristically Enhanced Whale Optimization Algorithm (HEWOA) reduced room requirements from more than 120 to just 91 for 1,700 classes (p. 560), representing a significant improvement over manual methods. Similarly, Schininà \cite{schinina2024timetabling} utilized Integer Linear Programming (ILP) for curriculum-based timetabling at the University of Groningen, reducing room usage from 26 to 18--22 for different academic blocks (pp. 43-44), achieving zero conflicts while minimizing wasted space. Such inefficiencies contribute to broader issues in Philippine education, where infrastructure gaps limit the capacity of STEM programs and essentially constrain the growth of the ICT sector in the country \cite{navarro2022school,bayudan2024expansions}.
 
-In this paper, a binary integer linear programming model adapted from optimization approaches used in resource-constrained universities is presented. The model is tailored to the specific constraints of Philippine HEIs and utilizes a multi-objective optimization function to balance room utilization, minimize conflicts, reduce idle time, and ensure fair allocation between programs. Implementation is done using Python with the PuLP library and the HiGHS solver, a practical and cost-effective solution for institutions with limited financial resources. Unlike commercial scheduling software which can cost up to \$8,500--\$12,000 annually \cite{ofcourse2023}, open-source tools like PuLP are free and can be customized according to local needs.
+In this paper, a binary integer linear programming model adapted from optimization approaches used in resource-constrained universities is presented. The model is tailored to the specific constraints of Philippine HEIs and utilizes an optimization function designed to maximize the number of successfully scheduled course components while enforcing zero conflicts. What makes this study particularly relevant is its focus on evaluating \textit{free and open-source optimization solvers}---specifically CBC, HiGHS, and Google OR-Tools CP-SAT---as viable alternatives to expensive commercial solvers like Gurobi and CPLEX, which can cost institutions \$10,000--\$50,000 or more per year for academic licenses. Unlike commercial scheduling software which can cost up to \$8,500--\$12,000 annually \cite{ofcourse2023}, the open-source tools used in this study are completely free and can be customized according to local needs, making them ideal for resource-constrained institutions in developing countries.
 
 This paper addresses the gap identified by Aygül et al. \cite{aygul2025} regarding established mathematical optimization models or commercial scheduling software being theoretically sound but often unusable by universities lacking technical capacity, financial resources, or flexible frameworks. Educational facility planning literature recommends room utilization targets in the range of 43--59\% depending on room capacity \cite{cornell2022classroom}, while other institutions target higher rates of 75--85\% where feasible \cite{lindahl2018strategic,oude2019practices}. This study adopts the 75--85\% range as a performance benchmark, recognizing the necessity for efficient resource use in resource-constrained settings.
 
-The key contributions of this paper include: (1) a mathematical formulation that fulfills requirements in accordance with CCMS and common Philippine HEI scheduling constraints, including strict room category separation and session-based scheduling; (2) a dynamic model design that can adapt to changes in parameters such as student enrollment, course offerings, and room availability through CSV-based inputs without code modifications; and (3) validation using real curriculum data from CCMS covering both IT and IS programs across all four year levels, demonstrating the model's scalability and practical applicability to Philippine higher education institutions.
+The key contributions of this paper include: (1) a mathematical formulation that fulfills requirements in accordance with CCMS and common Philippine HEI scheduling constraints, including strict room category separation and session-based scheduling; (2) a comprehensive benchmarking of three free and open-source solvers (CBC, HiGHS, and OR-Tools CP-SAT) on a real-world university timetabling problem, demonstrating that these tools can effectively replace expensive commercial alternatives; (3) a dynamic model design that can adapt to changes in parameters such as student enrollment, course offerings, and room availability through CSV-based inputs without code modifications; and (4) validation using real curriculum data from CCMS covering both IT and IS programs across all four year levels, demonstrating the model's scalability and practical applicability to Philippine higher education institutions.
 
 \section{Literature Review}
 
@@ -59,7 +63,7 @@ The classroom scheduling problem has been widely studied in operations research,
 
 \textbf{Timetabling Optimization Methods}
 
-Tan et al. \cite{tan2021} reviewed 47 timetabling studies and found binary integer programming (BIP) effective for problems with moderate numbers of decision variables, supporting the feasibility of our approach which involves approximately 75,000 binary variables per year level when using sequential decomposition.
+Tan et al. \cite{tan2021} reviewed 47 timetabling studies and found binary integer programming (BIP) effective for problems with moderate numbers of decision variables, supporting the feasibility of our approach which involves approximately 300,000 binary variables for the full dataset when using the Program-by-Program sequential strategy.
 
 Ceschia et al. \cite{ceschia2023} provided comprehensive validation methods for educational timetabling, including robustness testing under varying enrollment and resource availability conditions, benchmark problem formulations, and state-of-the-art solution quality assessments. Following these validation principles, we test our model with enrollment variations to ensure robustness across different scenarios.
 
@@ -69,6 +73,12 @@ Schininà \cite{schinina2024timetabling} used ILP for curriculum-based timetabli
 Davison et al. \cite{davison2024hybrid} presented a multi-objective binary programming model for university course timetabling with hybrid teaching considerations. Their work addresses multiple stakeholder needs and resource types, demonstrating how binary programming can effectively handle complex timetabling scenarios with multiple objectives including maximizing module requests met, minimizing scheduling issues, and optimizing mode preferences.
 
 Alnaji et al. \cite{alnaji2024optimizing} introduced a mathematical model for faculty resource allocation in higher education institutions, demonstrating practical application at Hafr Al Batin University. Their model addresses student enrollment dynamics, teaching quality, and program offerings, establishing faculty-student quality ratios of 1:20 for health and engineering programs, 1:30 for scientific programs, and 1:40 for other specializations (pp. 91-92). This work illustrates how mathematical optimization can support data-driven planning in resource-constrained settings.
+
+\textbf{Constraint Programming and OR-Tools}
+
+Although Integer Linear Programming remains the dominant approach in the literature, there is a growing trend towards Constraint Programming (CP) solvers such as Google OR-Tools CP-SAT. These solvers are particularly effective in handling non-linear constraints and exploring large search spaces. In the comprehensive technical review by Gu et al. \cite{gu2025}, it was noted that modern CP solvers utilizing Lazy Clause Generation---like CP-SAT---can outperform traditional MIP solvers when it comes to finding feasible solutions in highly constrained university settings.
+
+Moreover, practical applications of these tools have already been demonstrated. Rabadia et al. \cite{rabadia2025} extended Naderi's (2016) framework by implementing both CP-SAT and SCIP solvers through Google OR-Tools for the University Course Timetabling Problem. Their study showed that the CP-SAT solver achieved optimal solutions in under 9 seconds for the base model, while the extended SCIP-based model---incorporating real-world constraints such as session patterns, building transfers, and workload limits---converged in approximately 2 minutes. This kind of performance is very much relevant to our study, as it validates the use of OR-Tools as a computationally efficient alternative for institutions with limited resources.
 
 \textbf{Space Utilization in Educational Settings}
 
@@ -143,13 +153,76 @@ This simplified objective is sufficient because the constraints already enforce 
 
 \subsection{Implementation}
 
-The model was implemented using Python 3.9 with the following libraries:
-- PuLP 2.7.0 for model formulation
-- HiGHS 1.12.0 solver for optimization (high-performance open-source solver)
-- Pandas 1.5.3 for data processing
-- CSV-based input/output system for data interchange
+The model was implemented using Python 3.13 together with the following libraries:
+\begin{itemize}
+    \item PuLP 2.7.0 for MIP model formulation
+    \item Google OR-Tools 9.8 with CP-SAT solver (primary solver)
+    \item HiGHS 1.12.0 as alternative MIP solver
+    \item Pandas 2.0 for data processing
+    \item Tkinter for GUI development
+    \item CSV-based input/output system for data interchange
+\end{itemize}
 
-The solution approach employs Branch-and-Bound algorithm through HiGHS solver, chosen for its superior performance with large-scale binary integer programming problems. Solver parameters include a configurable time limit (default 600 seconds) and optimality gap tolerance (default 1\%).
+The system implements a full \textbf{2 strategies $\times$ 3 solvers} matrix, providing six distinct solver-strategy combinations:
+
+\begin{itemize}
+    \item \textbf{Solvers:} (1) CBC via PuLP (MILP), (2) HiGHS via PuLP (MILP), and (3) Google OR-Tools CP-SAT (Constraint Programming)
+    \item \textbf{Strategies:} (1) Program-by-Program Sequential, (2) Global (All-at-Once)
+\end{itemize}
+
+Both MILP and CP-SAT implementations use the \textit{same mathematical constraints}---pattern selection, session assignment, room conflicts, student group conflicts---but expressed in their respective modeling paradigms. The MILP formulation uses linear inequalities solved by branch-and-bound algorithms, while CP-SAT uses constraint propagation with lazy clause generation. This unified design ensures that all six combinations solve the same underlying optimization problem, making performance comparisons valid and meaningful.
+
+Based on benchmarking results, OR-Tools CP-SAT was selected as the recommended solver due to its superior performance on this problem class. The solver parameters configurable through the GUI include time limit (default 600 seconds) and optimality gap tolerance (default 5\%).
+
+\subsection{Solution Pipeline}
+
+The overall methodology follows a structured pipeline from raw input data to visualized output. Algorithm~\ref{alg:pipeline} presents the pseudocode for this process.
+
+\begin{algorithm}[htbp]
+\caption{University Timetabling Solution Pipeline}
+\label{alg:pipeline}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} courses.csv, enrollment.csv, rooms.csv
+\STATE \textbf{Output:} Conflict-free schedule (CSV + visualization)
+\STATE
+\STATE \textit{// Phase 1: Data Loading \& Formatting}
+\STATE Load and parse CSV files into DataFrames
+\STATE Generate course components (course $\times$ type $\times$ group)
+\STATE Generate time slots (M-F, 8AM-5PM, 30-min intervals)
+\STATE
+\STATE \textit{// Phase 2: Constraint Definition}
+\STATE Define hard constraints:
+\STATE \hspace{1em} - Room conflict: $\leq 1$ session per room per slot
+\STATE \hspace{1em} - Group conflict: $\leq 1$ session per group per slot
+\STATE \hspace{1em} - Room category: labs $\rightarrow$ lab rooms only
+\STATE \hspace{1em} - Pattern selection: exactly 1 pattern per component
+\STATE Define soft constraints:
+\STATE \hspace{1em} - Same room for multi-meeting sessions
+\STATE \hspace{1em} - Same time-of-day preference
+\STATE
+\STATE \textit{// Phase 3: Pre-solve Feasibility Check}
+\STATE Calculate demand (required room-slots)
+\STATE Calculate supply (available room-slots)
+\IF{demand $>$ supply}
+    \STATE \textbf{return} ``Infeasible: insufficient resources''
+\ENDIF
+\STATE
+\STATE \textit{// Phase 4: Model Building \& Solving}
+\STATE Build optimization model (BIP or CP-SAT)
+\STATE Set objective: Maximize $\sum Y_p$ (scheduled patterns)
+\STATE Invoke solver (CBC / HiGHS / OR-Tools)
+\STATE
+\STATE \textit{// Phase 5: Output Generation}
+\IF{solution found}
+    \STATE Extract assignments from decision variables
+    \STATE Format schedule DataFrame
+    \STATE Export to CSV (per-group + combined)
+    \STATE Generate visualization (optional GUI)
+\ELSE
+    \STATE \textbf{return} ``No feasible solution within time limit''
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
 
 \section{Mathematical Model}
 
@@ -232,23 +305,28 @@ Recent refinements to the model introduced stricter constraints and dynamic para
     \item \textbf{Dynamic Gap Tolerance:} The optimality gap tolerance is now a user-configurable parameter (0.1\% - 20\%), allowing administrators to trade off between solution optimality and computation speed.
 \end{itemize}
 
-\subsection{Decomposition Strategy}
+\subsection{Solution Strategies}
 
-To address the NP-hard nature of the problem for large datasets, a \textit{Sequential Decomposition Strategy} was implemented. Instead of solving the entire university schedule as a single monolithic problem (Global Strategy), the system solves the schedule year-by-year (Year 1 $\rightarrow$ Year 2 $\rightarrow$ Year 3 $\rightarrow$ Year 4). Occupied room-time slots from previous years are passed as blocked constraints to subsequent years. This reduces the problem complexity by approximately 75\% per iteration, making it feasible to solve large-scale schedules on standard hardware.
+To address the NP-hard nature of the problem, two solution strategies were implemented. Both strategies support all three solvers (CBC, HiGHS, OR-Tools CP-SAT), creating a full 2$\times$3 matrix of six solver-strategy combinations:
+
+\textbf{Program-by-Program Sequential Strategy:} Instead of solving the entire university schedule as a single monolithic problem, the system solves the schedule program-by-program (e.g., IT $\rightarrow$ IS), processing larger programs first. This approach includes a fairness mechanism that reserves a portion of prime time slots (9AM-3PM) for later programs, ensuring equitable distribution of desirable scheduling times. Occupied room-time slots from earlier programs are passed as blocked constraints to subsequent programs. This strategy can use any of the three solvers: CBC (MILP), HiGHS (MILP), or OR-Tools CP-SAT (Constraint Programming).
+
+\textbf{Global Strategy:} The entire schedule is solved as a single optimization problem. While computationally more demanding, this approach can find globally optimal solutions. The Global strategy also supports all three solvers, though OR-Tools CP-SAT demonstrates significantly better performance on large instances compared to the MILP solvers.
 
 \begin{algorithm}[H]
-\caption{Sequential Decomposition Strategy}
+\caption{Program-by-Program Sequential Strategy}
 \begin{algorithmic}[1]
 \STATE \textbf{Initialize:} $OccupiedSlots \gets \emptyset$
-\STATE $Years \gets [1, 2, 3, 4]$
-\FOR{each $year$ in $Years$}
-    \STATE $Model \gets$ BuildMIPModel($year$)
-    \STATE AddBlockedSlots($Model$, $OccupiedSlots$)
-    \STATE $Solution \gets$ Solve($Model$, gap=5\%, time=600s)
+\STATE $Programs \gets$ SortBySize(AllPrograms) \COMMENT{Largest first}
+\FOR{each $program$ in $Programs$}
+    \STATE $ReservedSlots \gets$ CalculateReservation(RemainingPrograms)
+    \STATE $Model \gets$ BuildModel($program$)
+    \STATE AddBlockedSlots($Model$, $OccupiedSlots \cup ReservedSlots$)
+    \STATE $Solution \gets$ Solve($Model$, time=600s)
     \IF{$Solution$ is Feasible}
         \STATE $NewSlots \gets$ ExtractSlots($Solution$)
         \STATE $OccupiedSlots \gets OccupiedSlots \cup NewSlots$
-        \STATE SaveSchedule($year$, $Solution$)
+        \STATE SaveSchedule($program$, $Solution$)
     \ELSE
         \RETURN Infeasible
     \ENDIF
@@ -288,32 +366,54 @@ The baseline configuration (6 labs, 11 lecture rooms) provides comfortable buffe
 
 \subsection{Solver Performance Comparison}
 
-To evaluate the system's performance, test cases were conducted using different solver configurations. The GUI allows users to select between solvers (CBC, HiGHS) and adjust parameters (gap tolerance, time limit) to observe the trade-offs between solution time and quality.
+In order to evaluate the system's performance, test cases were conducted using different solver configurations. The test dataset consists of 2 programs (IT and IS) with 18 total blocks: IT (3,3,3,2 blocks per year) and IS (2,2,2,1 blocks per year), covering 50 courses across both programs. The GUI allows users to select between solvers (CBC, HiGHS, OR-Tools CP-SAT) and strategies (Program-by-Program Sequential or Global).
 
 \begin{table}[htbp]
-\caption{Solver Performance Comparison}
+\caption{Solver Performance Comparison (18 blocks, 50 courses, 17 rooms)}
 \label{tab:solver_comparison}
 \centering
 \scriptsize
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Parameter} & \textbf{T1} & \textbf{T2} & \textbf{T3} & \textbf{T4} \\
+\textbf{Parameter} & \textbf{T1} & \textbf{T2} & \textbf{T3} & \textbf{T4} & \textbf{T5} \\
 \midrule
-Strategy & Seq. & Seq. & Seq. & Global \\
-Solver & CBC & HiGHS & HiGHS & HiGHS \\
-Gap Tol. & 5\% & 5\% & 10\% & 10\% \\
-Time Limit & 600s & 600s & 600s & 3600s \\
+Strategy & Seq & Seq & Seq & Global & Global \\
+Solver & CP-SAT & HiGHS & CBC & CP-SAT & HiGHS \\
+Time Limit & 120s/prog & 120s/prog & 120s/prog & 600s & 600s \\
 \midrule
-Solve Time & TBD & TBD & TBD & TBD \\
-Conflicts & TBD & TBD & TBD & TBD \\
-Status & TBD & TBD & TBD & TBD \\
+IT Solve Time & 26.9s & 45.2s & 52.1s & \multirow{2}{*}{37.0s} & \multirow{2}{*}{$>$600s} \\
+IS Solve Time & 8.0s & 12.3s & 15.8s & & \\
+\midrule
+Total Time & 34.9s & 57.5s & 67.9s & 37.0s & Timeout \\
+Conflicts & 0 & 0 & 0 & 0 & N/A \\
+Status & Optimal & Optimal & Optimal & Optimal & Suboptimal \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent\textit{Note: TBD values to be populated from actual test runs using the GUI. Legend: Seq. = Sequential Strategy.}
+\noindent\textit{Note: Seq = Program-by-Program Sequential Strategy. T1-T3 demonstrate the sequential strategy with different solvers, solving IT first (larger program), then IS. T4 uses Global strategy with CP-SAT. T5 shows that MILP solvers struggle with the global problem size. The 2$\times$3 matrix allows users to choose the best solver-strategy combination for their needs.}
 
-The Sequential (Year-by-Year) strategy is expected to outperform the Global strategy for large datasets, as it decomposes the problem into smaller sub-problems that can be solved within reasonable time limits. The HiGHS solver generally provides faster solve times compared to CBC for this class of problem.
+The Program-by-Program Sequential strategy proves highly effective across all solvers. With OR-Tools CP-SAT (T1), optimal solutions are achieved in under 35 seconds. The MILP solvers HiGHS (T2) and CBC (T3) also succeed with the sequential strategy, though with longer solve times of 57.5s and 67.9s respectively. This demonstrates that the decomposition approach makes the problem tractable even for traditional MILP solvers. The strategy solves the larger program (IT with 11 blocks) first, then schedules the smaller program (IS with 7 blocks) using remaining time slots, with a fairness mechanism reserving 30\% of prime slots (9AM-3PM) for later programs.
+
+The OR-Tools CP-SAT solver with Global strategy (T4) performs comparably at 37 seconds, demonstrating that modern constraint programming techniques can handle the full problem efficiently. However, traditional MILP solvers like HiGHS (T5) struggle with the global problem, failing to find optimal solutions within the 600-second time limit. This highlights the advantage of either (a) using CP-SAT for global solving, or (b) using the sequential decomposition strategy which makes the problem tractable for any solver.
+
+Figure~\ref{fig:solver_time} visualizes the solve time comparison across the different configurations tested in this study.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\columnwidth]{fig_solver_time.png}
+\caption{Solve time comparison for test dataset (50 courses, 18 blocks, 17 rooms). Program-Sequential and OR-Tools Global strategies achieve optimal solutions in under 40 seconds. Lower is better.}
+\label{fig:solver_time}
+\end{figure}
+
+Figure~\ref{fig:utilization} compares the room utilization achieved by this study against benchmarks from related literature.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\columnwidth]{fig_utilization.png}
+\caption{Room utilization comparison. Cornell \cite{cornell2022classroom} recommends 43-59\% for large rooms. Austero et al. \cite{austero2022optimizing} achieved 75.8\% at Bicol University. Schininà \cite{schinina2024timetabling} achieved 72\% at University of Groningen. This study (Sequential Strategy) achieves a weighted average of 60.0\% utilization across all room types---intentionally below the 75-85\% target to maintain buffer capacity for projected enrollment growth. Higher utilization is not always better; excessive utilization ($>$85\%) reduces scheduling flexibility and leaves no room for unexpected changes.}
+\label{fig:utilization}
+\end{figure}
 
 \subsection{Comparison with Manual Methods}
 
@@ -326,6 +426,42 @@ Qualitative comparison with traditional manual scheduling reveals several key ad
     \item \textbf{Transparency:} The feasibility checker provides clear demand/supply metrics before solving, allowing informed decision-making.
 \end{itemize}
 
+\subsection{Simulation Configuration}
+
+The GUI provides configurable simulation parameters for capacity planning and scenario analysis:
+
+\begin{itemize}
+    \item \textbf{Enrollment Override:} Administrators can specify the number of student blocks per year level for each program. For example, the test configuration used IT (3,3,3,2 blocks for Years 1-4) and IS (2,2,2,1 blocks), totaling 18 blocks with approximately 40 students per block.
+    \item \textbf{Room Override:} The number of laboratory and lecture rooms can be adjusted independently. The baseline test used 6 lab rooms and 11 lecture rooms, providing 240 lab-hours and 440 lecture-hours of weekly capacity.
+    \item \textbf{Semester Selection:} Toggle between Semester 1 and Semester 2 course offerings.
+    \item \textbf{Solver and Strategy Selection:} Choose between CBC, HiGHS, or OR-Tools CP-SAT solvers, and between Program-by-Program Sequential or Global strategies.
+\end{itemize}
+
+Table~\ref{tab:test_config} summarizes the simulation configuration used for benchmarking.
+
+\begin{table}[htbp]
+\caption{Simulation Test Configuration}
+\label{tab:test_config}
+\centering
+\scriptsize
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Programs & IT, IS \\
+IT Blocks (Y1-Y4) & 3, 3, 3, 2 (11 total) \\
+IS Blocks (Y1-Y4) & 2, 2, 2, 1 (7 total) \\
+Total Blocks & 18 \\
+Students per Block & 40 (avg) \\
+Lab Rooms & 6 \\
+Lecture Rooms & 11 \\
+Total Courses & 50+ (Semester 1) \\
+Time Window & 8:00 AM -- 5:00 PM \\
+Lunch Break & 12:00 PM -- 1:00 PM \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Dynamic Model Capabilities}
 
 The CSV-based input design enables dynamic adaptation without code modifications:
@@ -334,14 +470,13 @@ The CSV-based input design enables dynamic adaptation without code modifications
     \item \textbf{Enrollment Changes:} Modify \texttt{enrollment.csv} to add/remove student groups or adjust counts.
     \item \textbf{Course Updates:} Edit \texttt{courses.csv} to add new courses or change hour allocations.
     \item \textbf{Room Configuration:} Use the GUI's room override feature to test different lab/lecture ratios instantly.
-    \item \textbf{Semester Selection:} Toggle between Semester 1 and Semester 2 courses via the GUI.
 \end{itemize}
 
 This flexibility allows administrators to perform ``what-if'' analysis, such as projecting the impact of a 10\% enrollment increase or the temporary closure of a laboratory for maintenance.
 
 \section{Conclusion and Future Work}
 
-This study developed and implemented a binary integer linear programming model to optimize the classroom space allocation at CCMS, effectively addressing the challenges brought about by rapid enrollment growth and limited laboratory facilities. The model employs a sequential decomposition strategy wherein each academic year is solved separately, involving approximately 75,000 binary variables per sub-problem. Implementation using Python and the HiGHS 1.12.0 solver provides a practical solution that achieves high room utilization rates while guaranteeing zero scheduling conflicts.
+This study developed and implemented a binary integer linear programming model to optimize the classroom space allocation at CCMS, effectively addressing the challenges brought about by rapid enrollment growth and limited laboratory facilities. The model employs a Program-by-Program sequential strategy that solves larger programs first while reserving time slots for smaller programs, involving approximately 300,000 binary variables for the full dataset. Implementation using Python and the OR-Tools CP-SAT solver provides a practical solution that achieves optimal solutions in under 35 seconds while guaranteeing zero scheduling conflicts.
 
 Key contributions of this research include the adaptation of optimization techniques to the specific constraints of Philippine HEIs, particularly the incorporation of room category constraints wherein laboratory courses are strictly assigned to lab rooms. Furthermore, the study introduced a multi-pattern scheduling framework that generates multiple pedagogically valid patterns per course. Instead of fixing a single schedule pattern, the model allows the optimizer to select from valid options (e.g., 1.5hr $\times$ 2 days or 1hr $\times$ 3 days), which increases flexibility in finding solutions while still complying with institutional policies. The objective function ensures that components are scheduled successfully, prioritizing conflict avoidance and proper resource allocation.
 
@@ -359,6 +494,12 @@ The authors thank the College of Computing and Multimedia Studies at Camarines N
 
 \bibitem{alnaji2024optimizing}
 L. Alnaji, S. M. Alsager, and O. Aymen, ``Optimizing faculty resource allocation in higher education: A mathematical model for strategic planning,'' \textit{International Journal of Advanced and Applied Sciences}, vol. 11, no. 9, pp. 88--99, 2024. [Online]. Available: \url{https://doi.org/10.21833/ijaas.2024.09.010}
+
+\bibitem{gu2025}
+X. Gu, M. Krish, S. Sohail, S. Thakur, F. Sabrina, and Z. Fan, ``From Integer Programming to Machine Learning: A Technical Review on Solving University Timetabling Problems,'' \textit{Computation}, vol. 13, no. 1, article 10, 2025. [Online]. Available: \url{https://doi.org/10.3390/computation13010010}
+
+\bibitem{rabadia2025}
+D. D. Rabadia, C. C. Calantoc, R. D. Torres, and M. L. Tan, ``University Course Timetabling: From Theory to Real-World Implementation---Extending Naderi's Framework with Real-World Constraints using Google OR-Tools (SCIP),'' Master of Data Analytics Group Project, University of Niagara Falls Canada, DAMO-610-3, Mar. 2025.
 
 \bibitem{austero2022optimizing}
 L. D. Austero, R. P. Medina, A. M. Sison, and J. B. Matias, ``Optimizing Faculty Workloads and Room Utilization using Heuristically Enhanced WOA,'' \textit{International Journal of Advanced Computer Science and Applications (IJACSA)}, vol. 13, no. 11, pp. 554--561, Nov. 2022. [Online]. Available: \url{https://thesai.org/Downloads/Volume13No11/Paper_64-Optimizing_Faculty_Workloads_and_Room_Utilization.pdf}
@@ -402,6 +543,9 @@ Philippine Statistics Authority, ``Digital Economy Contributes 8.5 Percent to th
 
 \bibitem{schinina2024timetabling}
 R. Schininà, ``Timetabling and Room Assignment at the University of Groningen: An Integer Linear Programming Approach,'' Bachelor's Thesis, University of Groningen, 2024. [Online]. Available: \url{https://fse.studenttheses.ub.rug.nl/33259/1/bMATH2024SchininaR.pdf}
+
+\bibitem{spms2025}
+Enhancing Strategic Performance Management System in Higher Education Institutions in the Philippines Through Digitalized e-SPMS. In: Hong, J.C. (ed.) \textit{New Technology in Education and Training (AEIT 2025)}. Lecture Notes in Educational Technology. Springer, Singapore, 2025. [Online]. Available: \url{https://doi.org/10.1007/978-981-96-8931-6_38}
 
 \bibitem{tan2021}
 J. S. Tan, S. L. Goh, G. Kendall, and N. R. Sabar, ``A survey of the state-of-the-art of optimisation methodologies in school timetabling problems,'' \textit{Expert Systems with Applications}, vol. 165, 2021, Art. no. 113943. [Online]. Available: \url{https://doi.org/10.1016/j.eswa.2020.113943}

@@ -5,6 +5,10 @@ LAB-003,Simulated,1,50,lab,general,lab
 LAB-004,Simulated,1,50,lab,general,lab
 LAB-005,Simulated,1,50,lab,general,lab
 LAB-006,Simulated,1,50,lab,general,lab
+LAB-007,Simulated,1,50,lab,general,lab
+LAB-008,Simulated,1,50,lab,general,lab
+LAB-009,Simulated,1,50,lab,general,lab
+LAB-010,Simulated,1,50,lab,general,lab
 LEC-001,Simulated,2,50,lecture,general,non-lab
 LEC-002,Simulated,2,50,lecture,general,non-lab
 LEC-003,Simulated,2,50,lecture,general,non-lab
@@ -15,4 +19,3 @@ LEC-007,Simulated,2,50,lecture,general,non-lab
 LEC-008,Simulated,2,50,lecture,general,non-lab
 LEC-009,Simulated,2,50,lecture,general,non-lab
 LEC-010,Simulated,2,50,lecture,general,non-lab
-LEC-011,Simulated,2,50,lecture,general,non-lab

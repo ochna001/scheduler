@@ -1,0 +1,240 @@
+Course Code,Course Title,Time,Days,Room,Lec,Lab,Units,No. of Hours,ETL Units,Instructor/Professor,Program-Year-Block
+IT 100,Introduction to Computing,08:00-09:00,F,NB-101,2,1,3,5,4.25,TBA,IT-1A
+IT 100,Introduction to Computing,08:00-09:00,M,NB-101,2,1,3,5,4.25,TBA,IT-1A
+IT 101,Computer Programming 1,13:00-14:00,F,NB-101,2,1,3,5,4.25,TBA,IT-1A
+IT 101,Computer Programming 1,13:00-14:00,M,NB-101,2,1,3,5,4.25,TBA,IT-1A
+GEC 1,Understanding the Self,16:00-17:00,F,NB-302,3,0,3,3,3.0,TBA,IT-1A
+GEC 1,Understanding the Self,16:00-17:00,M,NB-302,3,0,3,3,3.0,TBA,IT-1A
+GEC 1,Understanding the Self,16:00-17:00,W,NB-302,3,0,3,3,3.0,TBA,IT-1A
+GEC 2,Readings in Philippine History,09:00-10:00,M,NB-301,3,0,3,3,3.0,TBA,IT-1A
+GEC 2,Readings in Philippine History,09:00-10:00,F,NB-301,3,0,3,3,3.0,TBA,IT-1A
+GEC 2,Readings in Philippine History,09:00-10:00,W,NB-301,3,0,3,3,3.0,TBA,IT-1A
+GEC 3,Mathematics in the Modern World,08:00-09:30,TH,NB-301,3,0,3,3,3.0,TBA,IT-1A
+GEC 3,Mathematics in the Modern World,08:00-09:30,T,NB-301,3,0,3,3,3.0,TBA,IT-1A
+PathFit 1,Movement of Competency Training,15:00-17:00,TH,NB-301,2,0,2,2,2.0,TBA,IT-1A
+IT 100,Introduction to Computing,13:00-14:00,F,NB-203,2,1,3,5,4.25,TBA,IT-1B
+IT 100,Introduction to Computing,13:00-14:00,M,NB-203,2,1,3,5,4.25,TBA,IT-1B
+IT 101,Computer Programming 1,09:00-10:00,T,OB-L3,2,1,3,5,4.25,TBA,IT-1B
+IT 101,Computer Programming 1,09:00-10:00,M,OB-L3,2,1,3,5,4.25,TBA,IT-1B
+GEC 1,Understanding the Self,10:00-11:00,M,LIB-CL,3,0,3,3,3.0,TBA,IT-1B
+GEC 1,Understanding the Self,10:00-11:00,W,LIB-CL,3,0,3,3,3.0,TBA,IT-1B
+GEC 1,Understanding the Self,10:00-11:00,F,LIB-CL,3,0,3,3,3.0,TBA,IT-1B
+GEC 2,Readings in Philippine History,11:00-12:00,M,NB-301,3,0,3,3,3.0,TBA,IT-1B
+GEC 2,Readings in Philippine History,11:00-12:00,F,NB-301,3,0,3,3,3.0,TBA,IT-1B
+GEC 2,Readings in Philippine History,11:00-12:00,W,NB-301,3,0,3,3,3.0,TBA,IT-1B
+GEC 3,Mathematics in the Modern World,08:00-09:30,F,AB-102,3,0,3,3,3.0,TBA,IT-1B
+GEC 3,Mathematics in the Modern World,08:00-09:30,TH,AB-102,3,0,3,3,3.0,TBA,IT-1B
+PathFit 1,Movement of Competency Training,13:00-15:00,T,NB-302,2,0,2,2,2.0,TBA,IT-1B
+IT 100,Introduction to Computing,16:00-17:00,F,OB-L1,2,1,3,5,4.25,TBA,IT-1C
+IT 100,Introduction to Computing,16:00-17:00,M,OB-L1,2,1,3,5,4.25,TBA,IT-1C
+IT 101,Computer Programming 1,08:00-09:30,M,OB-L1,2,1,3,5,4.25,TBA,IT-1C
+IT 101,Computer Programming 1,08:00-09:30,TH,OB-L1,2,1,3,5,4.25,TBA,IT-1C
+GEC 1,Understanding the Self,15:00-16:00,W,NB-303,3,0,3,3,3.0,TBA,IT-1C
+GEC 1,Understanding the Self,15:00-16:00,F,NB-303,3,0,3,3,3.0,TBA,IT-1C
+GEC 1,Understanding the Self,15:00-16:00,M,NB-303,3,0,3,3,3.0,TBA,IT-1C
+GEC 2,Readings in Philippine History,13:00-14:00,W,LIB-CL,3,0,3,3,3.0,TBA,IT-1C
+GEC 2,Readings in Philippine History,13:00-14:00,F,LIB-CL,3,0,3,3,3.0,TBA,IT-1C
+GEC 2,Readings in Philippine History,13:00-14:00,M,LIB-CL,3,0,3,3,3.0,TBA,IT-1C
+GEC 3,Mathematics in the Modern World,08:00-09:30,W,NB-302,3,0,3,3,3.0,TBA,IT-1C
+GEC 3,Mathematics in the Modern World,08:00-09:30,F,NB-302,3,0,3,3,3.0,TBA,IT-1C
+PathFit 1,Movement of Competency Training,10:00-12:00,TH,NB-301,2,0,2,2,2.0,TBA,IT-1C
+IT 105,Applications Development and Emerging Technologies,08:00-09:00,TH,NB-103,2,1,3,5,4.25,TBA,IT-2A
+IT 105,Applications Development and Emerging Technologies,08:00-09:00,T,NB-103,2,1,3,5,4.25,TBA,IT-2A
+IT 106,Information Management,14:00-15:00,M,LIB-CL,3,0,3,3,3.0,TBA,IT-2A
+IT 106,Information Management,14:00-15:00,W,LIB-CL,3,0,3,3,3.0,TBA,IT-2A
+IT 106,Information Management,14:00-15:00,F,LIB-CL,3,0,3,3,3.0,TBA,IT-2A
+IT 107,Introduction to Human Computer Interaction,15:00-17:00,M,NB-203,2,1,3,5,4.25,TBA,IT-2A
+IT 108,Operating Systems,09:30-11:00,W,NB-103,2,1,3,5,4.25,TBA,IT-2A
+IT 108,Operating Systems,09:30-11:00,T,NB-103,2,1,3,5,4.25,TBA,IT-2A
+GEC 6,"Science, Technology and Society",08:00-09:30,F,NB-303,3,0,3,3,3.0,TBA,IT-2A
+GEC 6,"Science, Technology and Society",08:00-09:30,M,NB-303,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 2,Etika,11:00-12:00,W,NB-302,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 2,Etika,11:00-12:00,F,NB-302,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 2,Etika,11:00-12:00,M,NB-302,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 3,The Entrepreneurial Mind,13:00-14:00,F,NB-301,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 3,The Entrepreneurial Mind,13:00-14:00,M,NB-301,3,0,3,3,3.0,TBA,IT-2A
+GE Elec 3,The Entrepreneurial Mind,13:00-14:00,W,NB-301,3,0,3,3,3.0,TBA,IT-2A
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",09:00-11:00,TH,AB-101,2,0,2,2,2.0,TBA,IT-2A
+IT 105,Applications Development and Emerging Technologies,09:00-10:00,M,NB-101,2,1,3,5,4.25,TBA,IT-2B
+IT 105,Applications Development and Emerging Technologies,09:00-10:00,TH,NB-101,2,1,3,5,4.25,TBA,IT-2B
+IT 106,Information Management,11:00-12:00,F,NB-303,3,0,3,3,3.0,TBA,IT-2B
+IT 106,Information Management,11:00-12:00,W,NB-303,3,0,3,3,3.0,TBA,IT-2B
+IT 106,Information Management,11:00-12:00,M,NB-303,3,0,3,3,3.0,TBA,IT-2B
+IT 107,Introduction to Human Computer Interaction,15:00-16:00,F,NB-101,2,1,3,5,4.25,TBA,IT-2B
+IT 107,Introduction to Human Computer Interaction,15:00-16:00,W,NB-101,2,1,3,5,4.25,TBA,IT-2B
+IT 107,Introduction to Human Computer Interaction,15:00-16:00,M,NB-101,2,1,3,5,4.25,TBA,IT-2B
+IT 108,Operating Systems,13:00-14:30,TH,OB-L3,2,1,3,5,4.25,TBA,IT-2B
+IT 108,Operating Systems,13:00-14:30,F,OB-L3,2,1,3,5,4.25,TBA,IT-2B
+GEC 6,"Science, Technology and Society",10:00-11:00,M,NB-302,3,0,3,3,3.0,TBA,IT-2B
+GEC 6,"Science, Technology and Society",10:00-11:00,F,NB-302,3,0,3,3,3.0,TBA,IT-2B
+GEC 6,"Science, Technology and Society",10:00-11:00,W,NB-302,3,0,3,3,3.0,TBA,IT-2B
+GE Elec 2,Etika,08:00-09:30,F,LIB-CL,3,0,3,3,3.0,TBA,IT-2B
+GE Elec 2,Etika,08:00-09:30,T,LIB-CL,3,0,3,3,3.0,TBA,IT-2B
+GE Elec 3,The Entrepreneurial Mind,14:30-16:00,T,LIB-CL,3,0,3,3,3.0,TBA,IT-2B
+GE Elec 3,The Entrepreneurial Mind,14:30-16:00,TH,LIB-CL,3,0,3,3,3.0,TBA,IT-2B
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",10:00-12:00,T,EB-L1,2,0,2,2,2.0,TBA,IT-2B
+IT 105,Applications Development and Emerging Technologies,11:00-12:00,TH,OB-L3,2,1,3,5,4.25,TBA,IT-2C
+IT 105,Applications Development and Emerging Technologies,11:00-12:00,M,OB-L3,2,1,3,5,4.25,TBA,IT-2C
+IT 106,Information Management,14:00-15:00,W,EB-L1,3,0,3,3,3.0,TBA,IT-2C
+IT 106,Information Management,14:00-15:00,F,EB-L1,3,0,3,3,3.0,TBA,IT-2C
+IT 106,Information Management,14:00-15:00,M,EB-L1,3,0,3,3,3.0,TBA,IT-2C
+IT 107,Introduction to Human Computer Interaction,09:30-11:00,M,NB-202,2,1,3,5,4.25,TBA,IT-2C
+IT 107,Introduction to Human Computer Interaction,09:30-11:00,W,NB-202,2,1,3,5,4.25,TBA,IT-2C
+IT 108,Operating Systems,15:00-17:00,T,OB-L3,2,1,3,5,4.25,TBA,IT-2C
+GEC 6,"Science, Technology and Society",13:00-14:00,F,AB-102,3,0,3,3,3.0,TBA,IT-2C
+GEC 6,"Science, Technology and Society",13:00-14:00,M,AB-102,3,0,3,3,3.0,TBA,IT-2C
+GEC 6,"Science, Technology and Society",13:00-14:00,W,AB-102,3,0,3,3,3.0,TBA,IT-2C
+GE Elec 2,Etika,08:00-09:30,W,LIB-CL,3,0,3,3,3.0,TBA,IT-2C
+GE Elec 2,Etika,08:00-09:30,TH,LIB-CL,3,0,3,3,3.0,TBA,IT-2C
+GE Elec 3,The Entrepreneurial Mind,16:00-17:00,W,AB-102,3,0,3,3,3.0,TBA,IT-2C
+GE Elec 3,The Entrepreneurial Mind,16:00-17:00,F,AB-102,3,0,3,3,3.0,TBA,IT-2C
+GE Elec 3,The Entrepreneurial Mind,16:00-17:00,M,AB-102,3,0,3,3,3.0,TBA,IT-2C
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",09:00-11:00,T,AB-101,2,0,2,2,2.0,TBA,IT-2C
+IT 114,Quantitative Methods (Modeling and Simulation),14:00-15:00,F,NB-102,2,1,3,5,4.25,TBA,IT-3A
+IT 114,Quantitative Methods (Modeling and Simulation),14:00-15:00,M,NB-102,2,1,3,5,4.25,TBA,IT-3A
+IT 115,Networking 1,16:00-17:00,M,NB-101,2,1,3,5,4.25,TBA,IT-3A
+IT 115,Networking 1,16:00-17:00,T,NB-101,2,1,3,5,4.25,TBA,IT-3A
+IT 116,Systems Analysis and Design,15:00-17:00,TH,NB-101,2,1,3,5,4.25,TBA,IT-3A
+IT 117,Systems Administration and Maintenance,11:00-12:00,M,NB-101,2,1,3,5,4.25,TBA,IT-3A
+IT 117,Systems Administration and Maintenance,11:00-12:00,F,NB-101,2,1,3,5,4.25,TBA,IT-3A
+IT 118,Internet of Things,13:00-14:00,F,NB-302,3,0,3,3,3.0,TBA,IT-3A
+IT 118,Internet of Things,13:00-14:00,W,NB-302,3,0,3,3,3.0,TBA,IT-3A
+IT 118,Internet of Things,13:00-14:00,M,NB-302,3,0,3,3,3.0,TBA,IT-3A
+IT 119,Data Scalability and Analytics,15:00-16:00,W,EB-L1,3,0,3,3,3.0,TBA,IT-3A
+IT 119,Data Scalability and Analytics,15:00-16:00,F,EB-L1,3,0,3,3,3.0,TBA,IT-3A
+IT 119,Data Scalability and Analytics,15:00-16:00,M,EB-L1,3,0,3,3,3.0,TBA,IT-3A
+GEC 9,Ang Buhay at mga Akda ni Rizal,13:00-14:30,TH,LIB-CL,3,0,3,3,3.0,TBA,IT-3A
+GEC 9,Ang Buhay at mga Akda ni Rizal,13:00-14:30,T,LIB-CL,3,0,3,3,3.0,TBA,IT-3A
+IT 114,Quantitative Methods (Modeling and Simulation),13:00-14:00,T,NB-201,2,1,3,5,4.25,TBA,IT-3B
+IT 114,Quantitative Methods (Modeling and Simulation),13:00-14:00,F,NB-201,2,1,3,5,4.25,TBA,IT-3B
+IT 115,Networking 1,08:00-09:00,T,OB-L2,2,1,3,5,4.25,TBA,IT-3B
+IT 115,Networking 1,08:00-09:00,TH,OB-L2,2,1,3,5,4.25,TBA,IT-3B
+IT 116,Systems Analysis and Design,15:00-16:00,W,OB-L3,2,1,3,5,4.25,TBA,IT-3B
+IT 116,Systems Analysis and Design,15:00-16:00,M,OB-L3,2,1,3,5,4.25,TBA,IT-3B
+IT 116,Systems Analysis and Design,15:00-16:00,F,OB-L3,2,1,3,5,4.25,TBA,IT-3B
+IT 117,Systems Administration and Maintenance,11:00-12:00,T,NB-102,2,1,3,5,4.25,TBA,IT-3B
+IT 117,Systems Administration and Maintenance,11:00-12:00,TH,NB-102,2,1,3,5,4.25,TBA,IT-3B
+IT 118,Internet of Things,11:00-12:00,M,LIB-CL,3,0,3,3,3.0,TBA,IT-3B
+IT 118,Internet of Things,11:00-12:00,W,LIB-CL,3,0,3,3,3.0,TBA,IT-3B
+IT 118,Internet of Things,11:00-12:00,F,LIB-CL,3,0,3,3,3.0,TBA,IT-3B
+IT 119,Data Scalability and Analytics,09:30-11:00,W,NB-303,3,0,3,3,3.0,TBA,IT-3B
+IT 119,Data Scalability and Analytics,09:30-11:00,M,NB-303,3,0,3,3,3.0,TBA,IT-3B
+GEC 9,Ang Buhay at mga Akda ni Rizal,14:00-15:00,W,NB-302,3,0,3,3,3.0,TBA,IT-3B
+GEC 9,Ang Buhay at mga Akda ni Rizal,14:00-15:00,M,NB-302,3,0,3,3,3.0,TBA,IT-3B
+GEC 9,Ang Buhay at mga Akda ni Rizal,14:00-15:00,F,NB-302,3,0,3,3,3.0,TBA,IT-3B
+IT 114,Quantitative Methods (Modeling and Simulation),13:00-14:00,F,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 114,Quantitative Methods (Modeling and Simulation),13:00-14:00,W,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 114,Quantitative Methods (Modeling and Simulation),13:00-14:00,M,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 115,Networking 1,11:00-12:00,F,NB-103,2,1,3,5,4.25,TBA,IT-3C
+IT 115,Networking 1,11:00-12:00,W,NB-103,2,1,3,5,4.25,TBA,IT-3C
+IT 115,Networking 1,11:00-12:00,M,NB-103,2,1,3,5,4.25,TBA,IT-3C
+IT 116,Systems Analysis and Design,08:00-09:00,F,NB-102,2,1,3,5,4.25,TBA,IT-3C
+IT 116,Systems Analysis and Design,08:00-09:00,M,NB-102,2,1,3,5,4.25,TBA,IT-3C
+IT 117,Systems Administration and Maintenance,14:00-15:00,F,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 117,Systems Administration and Maintenance,14:00-15:00,M,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 117,Systems Administration and Maintenance,14:00-15:00,W,OB-L2,2,1,3,5,4.25,TBA,IT-3C
+IT 118,Internet of Things,15:00-16:00,W,LIB-CL,3,0,3,3,3.0,TBA,IT-3C
+IT 118,Internet of Things,15:00-16:00,F,LIB-CL,3,0,3,3,3.0,TBA,IT-3C
+IT 118,Internet of Things,15:00-16:00,M,LIB-CL,3,0,3,3,3.0,TBA,IT-3C
+IT 119,Data Scalability and Analytics,13:00-14:30,T,NB-301,3,0,3,3,3.0,TBA,IT-3C
+IT 119,Data Scalability and Analytics,13:00-14:30,TH,NB-301,3,0,3,3,3.0,TBA,IT-3C
+GEC 9,Ang Buhay at mga Akda ni Rizal,10:00-11:00,F,AB-101,3,0,3,3,3.0,TBA,IT-3C
+GEC 9,Ang Buhay at mga Akda ni Rizal,10:00-11:00,W,AB-101,3,0,3,3,3.0,TBA,IT-3C
+GEC 9,Ang Buhay at mga Akda ni Rizal,10:00-11:00,M,AB-101,3,0,3,3,3.0,TBA,IT-3C
+IT 124,Social and Professional Issues in Computing,13:00-14:30,TH,AB-201,3,0,3,3,3.0,TBA,IT-4A
+IT 124,Social and Professional Issues in Computing,13:00-14:30,T,AB-201,3,0,3,3,3.0,TBA,IT-4A
+IT 125,Capstone Project and Research 2,16:00-17:00,T,OB-L1,2,1,3,5,4.25,TBA,IT-4A
+IT 125,Capstone Project and Research 2,16:00-17:00,TH,OB-L1,2,1,3,5,4.25,TBA,IT-4A
+IT 126,Cyber Security Principle,14:00-15:00,F,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 126,Cyber Security Principle,14:00-15:00,M,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 126,Cyber Security Principle,14:00-15:00,W,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 127,Global Professional Practice,16:00-17:00,F,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 127,Global Professional Practice,16:00-17:00,M,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 127,Global Professional Practice,16:00-17:00,W,NB-301,3,0,3,3,3.0,TBA,IT-4A
+ITELECT 003,IT Elective 3*,09:00-10:00,T,OB-L1,2,1,3,5,4.25,TBA,IT-4A
+ITELECT 003,IT Elective 3*,09:00-10:00,W,OB-L1,2,1,3,5,4.25,TBA,IT-4A
+ITELECT 004,IT Elective 4*,10:00-11:00,W,NB-301,3,0,3,3,3.0,TBA,IT-4A
+ITELECT 004,IT Elective 4*,10:00-11:00,F,NB-301,3,0,3,3,3.0,TBA,IT-4A
+ITELECT 004,IT Elective 4*,10:00-11:00,M,NB-301,3,0,3,3,3.0,TBA,IT-4A
+IT 124,Social and Professional Issues in Computing,08:00-09:00,M,NB-301,3,0,3,3,3.0,TBA,IT-4B
+IT 124,Social and Professional Issues in Computing,08:00-09:00,F,NB-301,3,0,3,3,3.0,TBA,IT-4B
+IT 124,Social and Professional Issues in Computing,08:00-09:00,W,NB-301,3,0,3,3,3.0,TBA,IT-4B
+IT 125,Capstone Project and Research 2,10:00-11:00,M,NB-101,2,1,3,5,4.25,TBA,IT-4B
+IT 125,Capstone Project and Research 2,10:00-11:00,TH,NB-101,2,1,3,5,4.25,TBA,IT-4B
+IT 126,Cyber Security Principle,08:00-09:30,T,NB-302,3,0,3,3,3.0,TBA,IT-4B
+IT 126,Cyber Security Principle,08:00-09:30,TH,NB-302,3,0,3,3,3.0,TBA,IT-4B
+IT 127,Global Professional Practice,09:30-11:00,W,AB-102,3,0,3,3,3.0,TBA,IT-4B
+IT 127,Global Professional Practice,09:30-11:00,F,AB-102,3,0,3,3,3.0,TBA,IT-4B
+ITELECT 003,IT Elective 3*,11:00-12:00,T,NB-101,2,1,3,5,4.25,TBA,IT-4B
+ITELECT 003,IT Elective 3*,11:00-12:00,W,NB-101,2,1,3,5,4.25,TBA,IT-4B
+ITELECT 004,IT Elective 4*,13:00-14:00,M,EB-L1,3,0,3,3,3.0,TBA,IT-4B
+ITELECT 004,IT Elective 4*,13:00-14:00,F,EB-L1,3,0,3,3,3.0,TBA,IT-4B
+ITELECT 004,IT Elective 4*,13:00-14:00,W,EB-L1,3,0,3,3,3.0,TBA,IT-4B
+IS 100,Fundamentals of Information Systems,13:00-15:00,TH,NB-101,2,1,3,5,4.25,TBA,IS-1A
+IS 101,Business Process Management,09:30-11:00,T,AB-201,3,0,3,3,3.0,TBA,IS-1A
+IS 101,Business Process Management,09:30-11:00,TH,AB-201,3,0,3,3,3.0,TBA,IS-1A
+GEC 1,Understanding the Self,16:00-17:00,W,NB-303,3,0,3,3,3.0,TBA,IS-1A
+GEC 1,Understanding the Self,16:00-17:00,M,NB-303,3,0,3,3,3.0,TBA,IS-1A
+GEC 1,Understanding the Self,16:00-17:00,F,NB-303,3,0,3,3,3.0,TBA,IS-1A
+GEC 2,Readings in Philippine History,09:00-10:00,W,EB-L1,3,0,3,3,3.0,TBA,IS-1A
+GEC 2,Readings in Philippine History,09:00-10:00,F,EB-L1,3,0,3,3,3.0,TBA,IS-1A
+GEC 2,Readings in Philippine History,09:00-10:00,M,EB-L1,3,0,3,3,3.0,TBA,IS-1A
+GEC 3,Mathematics in the Modern World,15:00-16:00,F,NB-301,3,0,3,3,3.0,TBA,IS-1A
+GEC 3,Mathematics in the Modern World,15:00-16:00,W,NB-301,3,0,3,3,3.0,TBA,IS-1A
+GEC 3,Mathematics in the Modern World,15:00-16:00,M,NB-301,3,0,3,3,3.0,TBA,IS-1A
+PathFit 1,Movement of Competency Training,13:00-15:00,M,NB-303,2,0,2,2,2.0,TBA,IS-1A
+IS 100,Fundamentals of Information Systems,08:00-09:30,T,NB-101,2,1,3,5,4.25,TBA,IS-1B
+IS 100,Fundamentals of Information Systems,08:00-09:30,W,NB-101,2,1,3,5,4.25,TBA,IS-1B
+IS 101,Business Process Management,14:30-16:00,M,AB-101,3,0,3,3,3.0,TBA,IS-1B
+IS 101,Business Process Management,14:30-16:00,F,AB-101,3,0,3,3,3.0,TBA,IS-1B
+GEC 1,Understanding the Self,13:00-14:30,F,AB-101,3,0,3,3,3.0,TBA,IS-1B
+GEC 1,Understanding the Self,13:00-14:30,W,AB-101,3,0,3,3,3.0,TBA,IS-1B
+GEC 2,Readings in Philippine History,13:00-14:30,T,AB-101,3,0,3,3,3.0,TBA,IS-1B
+GEC 2,Readings in Philippine History,13:00-14:30,TH,AB-101,3,0,3,3,3.0,TBA,IS-1B
+GEC 3,Mathematics in the Modern World,09:30-11:00,T,LIB-CL,3,0,3,3,3.0,TBA,IS-1B
+GEC 3,Mathematics in the Modern World,09:30-11:00,TH,LIB-CL,3,0,3,3,3.0,TBA,IS-1B
+PathFit 1,Movement of Competency Training,08:00-10:00,M,NB-302,2,0,2,2,2.0,TBA,IS-1B
+IS 201,Enterprise Architecture,14:00-15:00,M,NB-201,2,1,3,5,4.25,TBA,IS-2A
+IS 201,Enterprise Architecture,14:00-15:00,T,NB-201,2,1,3,5,4.25,TBA,IS-2A
+IS 202,Data and Information Management,09:00-10:00,T,NB-102,2,1,3,5,4.25,TBA,IS-2A
+IS 202,Data and Information Management,09:00-10:00,TH,NB-102,2,1,3,5,4.25,TBA,IS-2A
+IS 203,Financial Management,13:00-14:30,TH,NB-303,3,0,3,3,3.0,TBA,IS-2A
+IS 203,Financial Management,13:00-14:30,F,NB-303,3,0,3,3,3.0,TBA,IS-2A
+GEC 6,"Science, Technology and Society",16:00-17:00,W,EB-L1,3,0,3,3,3.0,TBA,IS-2A
+GEC 6,"Science, Technology and Society",16:00-17:00,M,EB-L1,3,0,3,3,3.0,TBA,IS-2A
+GEC 6,"Science, Technology and Society",16:00-17:00,F,EB-L1,3,0,3,3,3.0,TBA,IS-2A
+GE Elec 2,Etika,14:30-16:00,TH,AB-201,3,0,3,3,3.0,TBA,IS-2A
+GE Elec 2,Etika,14:30-16:00,W,AB-201,3,0,3,3,3.0,TBA,IS-2A
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",10:00-12:00,T,NB-302,2,0,2,2,2.0,TBA,IS-2A
+IS 201,Enterprise Architecture,13:00-14:00,T,NB-101,2,1,3,5,4.25,TBA,IS-2B
+IS 201,Enterprise Architecture,13:00-14:00,W,NB-101,2,1,3,5,4.25,TBA,IS-2B
+IS 202,Data and Information Management,09:00-11:00,TH,NB-203,2,1,3,5,4.25,TBA,IS-2B
+IS 203,Financial Management,14:30-16:00,TH,NB-303,3,0,3,3,3.0,TBA,IS-2B
+IS 203,Financial Management,14:30-16:00,T,NB-303,3,0,3,3,3.0,TBA,IS-2B
+GEC 6,"Science, Technology and Society",09:00-10:00,M,AB-201,3,0,3,3,3.0,TBA,IS-2B
+GEC 6,"Science, Technology and Society",09:00-10:00,F,AB-201,3,0,3,3,3.0,TBA,IS-2B
+GEC 6,"Science, Technology and Society",09:00-10:00,W,AB-201,3,0,3,3,3.0,TBA,IS-2B
+GE Elec 2,Etika,16:00-17:00,M,LIB-CL,3,0,3,3,3.0,TBA,IS-2B
+GE Elec 2,Etika,16:00-17:00,W,LIB-CL,3,0,3,3,3.0,TBA,IS-2B
+GE Elec 2,Etika,16:00-17:00,F,LIB-CL,3,0,3,3,3.0,TBA,IS-2B
+PathFit 3,"Dance, Sports, Martial Arts, Group Exercise, Outdoor and Adventure Activities",09:00-11:00,T,AB-102,2,0,2,2,2.0,TBA,IS-2B
+IS 301,Project Management and Quality Assurance,09:30-11:00,T,NB-101,2,1,3,5,4.25,TBA,IS-3A
+IS 301,Project Management and Quality Assurance,09:30-11:00,W,NB-101,2,1,3,5,4.25,TBA,IS-3A
+IS 302,"IS Strategy, Management and Acquisition",08:00-09:30,TH,AB-201,3,0,3,3,3.0,TBA,IS-3A
+IS 302,"IS Strategy, Management and Acquisition",08:00-09:30,T,AB-201,3,0,3,3,3.0,TBA,IS-3A
+IS 303,Enterprise Resource Planning Systems,08:00-09:30,W,NB-203,2,1,3,5,4.25,TBA,IS-3A
+IS 303,Enterprise Resource Planning Systems,08:00-09:30,M,NB-203,2,1,3,5,4.25,TBA,IS-3A
+GEC 9,Ang Buhay at mga Akda ni Rizal,14:30-16:00,T,AB-101,3,0,3,3,3.0,TBA,IS-3A
+GEC 9,Ang Buhay at mga Akda ni Rizal,14:30-16:00,W,AB-101,3,0,3,3,3.0,TBA,IS-3A
+ISELECT 001,IS Elective 1 (Analytics),10:00-11:00,TH,NB-201,2,1,3,5,4.25,TBA,IS-3A
+ISELECT 001,IS Elective 1 (Analytics),10:00-11:00,F,NB-201,2,1,3,5,4.25,TBA,IS-3A
+IS 401,IS Project 2,09:30-11:00,W,OB-L2,2,1,3,5,4.25,TBA,IS-4A
+IS 401,IS Project 2,09:30-11:00,T,OB-L2,2,1,3,5,4.25,TBA,IS-4A
+IS 402,IS Implementation and Maintenance,15:00-16:00,W,AB-102,3,0,3,3,3.0,TBA,IS-4A
+IS 402,IS Implementation and Maintenance,15:00-16:00,F,AB-102,3,0,3,3,3.0,TBA,IS-4A
+IS 402,IS Implementation and Maintenance,15:00-16:00,M,AB-102,3,0,3,3,3.0,TBA,IS-4A
+IS 403,Social and Professional Issues in IS,13:00-14:30,T,NB-303,3,0,3,3,3.0,TBA,IS-4A
+IS 403,Social and Professional Issues in IS,13:00-14:30,W,NB-303,3,0,3,3,3.0,TBA,IS-4A
+ISELECT 004,IS Elective 4 (Management),16:00-17:00,W,OB-L3,2,1,3,5,4.25,TBA,IS-4A
+ISELECT 004,IS Elective 4 (Management),16:00-17:00,M,OB-L3,2,1,3,5,4.25,TBA,IS-4A
+ISELECT 004,IS Elective 4 (Management),16:00-17:00,F,OB-L3,2,1,3,5,4.25,TBA,IS-4A

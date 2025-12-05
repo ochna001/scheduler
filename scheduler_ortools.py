@@ -467,18 +467,31 @@ class OrToolsScheduler:
     def extract_schedule(self, solver: cp_model.CpSolver) -> pd.DataFrame:
         """Extract schedule as a DataFrame similar to CSV output in PuLP version."""
         rows = []
+        
+        # Track utilization during extraction
+        lab_rooms = [r for r in self.rooms if 
+                     self.rooms_df[self.rooms_df["room_id"] == r]["room_category"].iloc[0] == "lab"]
+        nonlab_rooms = [r for r in self.rooms if 
+                        self.rooms_df[self.rooms_df["room_id"] == r]["room_category"].iloc[0] != "lab"]
+        
+        occupied_slots = set()
+        
         for (s_id, j, k), var in self.X.items():
             if solver.BooleanValue(var):
-                sess = next(s for s in self.sessions if s.id == s_id)
+                # Mark occupied slots
+                room_id = self.rooms[j]
                 slot_ids = self.slot_occupation.get((s_id, k), [])
+                for s_idx in slot_ids:
+                    occupied_slots.add((room_id, s_idx))
+                
+                sess = next(s for s in self.sessions if s.id == s_id)
                 if not slot_ids:
                     continue
                 first_slot = self.time_slots[slot_ids[0]]
                 last_slot = self.time_slots[slot_ids[-1]]
                 day = first_slot["day"]
                 time_str = f"{first_slot['start']}-{last_slot['end']}"
-                room_id = self.rooms[j]
-
+                
                 # Look up course title
                 course_row = self.courses_df[self.courses_df["code"] == sess.course_code]
                 if not course_row.empty:
@@ -511,6 +524,19 @@ class OrToolsScheduler:
                     "Instructor/Professor": "TBA",
                     "Program-Year-Block": prog_year_block,
                 })
+        
+        # Calculate and print utilization stats
+        lab_occupied = sum(1 for (r, s) in occupied_slots if r in lab_rooms)
+        nonlab_occupied = sum(1 for (r, s) in occupied_slots if r in nonlab_rooms)
+        total_lab_slots = len(lab_rooms) * len(self.time_slots)
+        total_nonlab_slots = len(nonlab_rooms) * len(self.time_slots)
+        
+        lab_util = 100 * lab_occupied / total_lab_slots if total_lab_slots > 0 else 0
+        nonlab_util = 100 * nonlab_occupied / total_nonlab_slots if total_nonlab_slots > 0 else 0
+        
+        print("\nResource Utilization:")
+        print(f"  Labs:     {lab_occupied}/{total_lab_slots} slots ({lab_util:.1f}%)")
+        print(f"  Lectures: {nonlab_occupied}/{total_nonlab_slots} slots ({nonlab_util:.1f}%)")
 
         return pd.DataFrame(rows)
 

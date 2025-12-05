@@ -10,7 +10,6 @@ import pulp as pl
 from datetime import datetime
 # Import the logic from the existing scripts
 from scheduler import SchedulingOptimizer
-from scheduler_large_dataset import solve_large_dataset
 from scheduler_ortools import OrToolsScheduler
 from ortools.sat.python import cp_model
 
@@ -49,6 +48,12 @@ class SchedulerGUI:
         self.gap_tolerance_var = tk.DoubleVar(value=5.0)  # 5% gap tolerance
         self.solver_var = tk.StringVar(value="PULP_CBC_CMD")
         
+        # Dynamic enrollment: blocks per program per year
+        self.override_blocks = tk.BooleanVar(value=False)
+        self.program_configs = []  # List of {name: StringVar, blocks: [IntVar x 4]}
+        self.block_input_frame = None
+        self._init_default_programs()
+        
         self.schedules_data = []
         self.optimizer = None # Store optimizer reference
         
@@ -73,9 +78,28 @@ class SchedulerGUI:
         main_paned = ttk.PanedWindow(main_frame, orient=tk.HORIZONTAL)
         main_paned.pack(fill=tk.BOTH, expand=True)
         
-        # --- LEFT PANEL ---
-        left_panel = ttk.LabelFrame(main_paned, text="Configuration", padding="10")
-        main_paned.add(left_panel, weight=1) # Config panel takes less space
+        # --- LEFT PANEL (Scrollable) ---
+        left_container = ttk.LabelFrame(main_paned, text="Configuration", padding="5")
+        main_paned.add(left_container, weight=1)
+        
+        # Create canvas and scrollbar for scrollable left panel
+        left_canvas = tk.Canvas(left_container, highlightthickness=0)
+        left_scrollbar = ttk.Scrollbar(left_container, orient="vertical", command=left_canvas.yview)
+        left_panel = ttk.Frame(left_canvas, padding="5")
+        
+        # Configure scrolling
+        left_panel.bind("<Configure>", lambda e: left_canvas.configure(scrollregion=left_canvas.bbox("all")))
+        left_canvas.create_window((0, 0), window=left_panel, anchor="nw")
+        left_canvas.configure(yscrollcommand=left_scrollbar.set)
+        
+        # Pack scrollbar and canvas
+        left_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        left_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        # Enable mouse wheel scrolling
+        def _on_mousewheel(event):
+            left_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        left_canvas.bind_all("<MouseWheel>", _on_mousewheel)
         
         # Presets
         ttk.Label(left_panel, text="Presets:", font=("Segoe UI", 9, "bold")).pack(anchor="w", pady=(0, 5))
@@ -107,6 +131,43 @@ class SchedulerGUI:
         ttk.Spinbox(self.room_input_frame, from_=1, to=100, textvariable=self.num_lec_rooms, width=5).grid(row=1, column=1, padx=5)
         
         self.toggle_room_inputs()
+        
+        # Enrollment Configuration (Blocks per Program per Year)
+        ttk.Separator(left_panel, orient='horizontal').pack(fill='x', pady=10)
+        ttk.Label(left_panel, text="Enrollment Configuration:", font=("Segoe UI", 9, "bold")).pack(anchor="w", pady=(0, 5))
+        
+        override_blocks_check = ttk.Checkbutton(left_panel, text="Override Enrollment (Simulation)", variable=self.override_blocks, command=self.toggle_block_inputs)
+        override_blocks_check.pack(anchor="w")
+        
+        # Container for program configs
+        self.block_input_frame = ttk.Frame(left_panel)
+        self.block_input_frame.pack(fill=tk.X, pady=5)
+        
+        # Header row with grid layout for better alignment
+        header_frame = ttk.Frame(self.block_input_frame)
+        header_frame.pack(fill=tk.X, pady=(0, 3))
+        ttk.Label(header_frame, text="Program", width=10, font=("Segoe UI", 8, "bold")).grid(row=0, column=0, padx=1, sticky="w")
+        for col, yr in enumerate(["Y1", "Y2", "Y3", "Y4"], start=1):
+            ttk.Label(header_frame, text=yr, width=4, font=("Segoe UI", 8, "bold")).grid(row=0, column=col, padx=1)
+        
+        # Program rows container
+        self.programs_container = ttk.Frame(self.block_input_frame)
+        self.programs_container.pack(fill=tk.X)
+        self._rebuild_program_rows()
+        
+        # Total blocks label
+        self.total_blocks_var = tk.StringVar(value="Total: 0 blocks")
+        self.total_blocks_label = ttk.Label(self.block_input_frame, textvariable=self.total_blocks_var, font=("Segoe UI", 8, "italic"))
+        self.total_blocks_label.pack(anchor="w", pady=(3, 0))
+        self._update_total_blocks()
+        
+        # Add/Remove program buttons
+        btn_frame = ttk.Frame(self.block_input_frame)
+        btn_frame.pack(fill=tk.X, pady=(5, 2))
+        ttk.Button(btn_frame, text="+ Add Program", command=self._add_program, width=14).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_frame, text="- Remove Last", command=self._remove_program, width=14).pack(side=tk.LEFT, padx=2)
+        
+        self.toggle_block_inputs()
 
         # Settings
         ttk.Separator(left_panel, orient='horizontal').pack(fill='x', pady=10)
@@ -146,14 +207,14 @@ class SchedulerGUI:
         # Solver Selection
         ttk.Label(left_panel, text="Solver:").pack(anchor="w", pady=(5,0))
         solver_combo = ttk.Combobox(left_panel, textvariable=self.solver_var, state="readonly")
-        solver_combo['values'] = ("PULP_CBC_CMD", "HiGHS_CMD", "GLPK_CMD", "COIN_CMD", "OR_TOOLS_CP_SAT")
+        solver_combo['values'] = ("PULP_CBC_CMD", "HiGHS_CMD", "OR_TOOLS_CP_SAT")
         solver_combo.pack(fill=tk.X)
 
         # Strategy Selection
         ttk.Label(left_panel, text="Strategy:").pack(anchor="w", pady=(5,0))
-        self.strategy_var = tk.StringVar(value="Sequential (Year-by-Year)")
+        self.strategy_var = tk.StringVar(value="Sequential (Program-by-Program)")
         strategy_combo = ttk.Combobox(left_panel, textvariable=self.strategy_var, state="readonly")
-        strategy_combo['values'] = ("Sequential (Year-by-Year)", "Global (All-at-Once)")
+        strategy_combo['values'] = ("Sequential (Program-by-Program)", "Global (All-at-Once)")
         strategy_combo.pack(fill=tk.X)
         
         # Actions
@@ -329,6 +390,112 @@ class SchedulerGUI:
             for child in self.room_input_frame.winfo_children():
                 child.configure(state='disabled')
 
+    def _init_default_programs(self):
+        """Initialize default program configurations (IT and IS)."""
+        self.program_configs = [
+            {'name': tk.StringVar(value='IT'), 'blocks': [tk.IntVar(value=5), tk.IntVar(value=4), tk.IntVar(value=4), tk.IntVar(value=4)]},
+            {'name': tk.StringVar(value='IS'), 'blocks': [tk.IntVar(value=4), tk.IntVar(value=4), tk.IntVar(value=3), tk.IntVar(value=3)]},
+        ]
+
+    def _rebuild_program_rows(self):
+        """Rebuild the program configuration rows in the UI."""
+        # Clear existing rows
+        for widget in self.programs_container.winfo_children():
+            widget.destroy()
+        
+        # Create a row for each program using grid for alignment
+        for i, config in enumerate(self.program_configs):
+            row_frame = ttk.Frame(self.programs_container)
+            row_frame.pack(fill=tk.X, pady=2)
+            
+            # Program name entry
+            name_entry = ttk.Entry(row_frame, textvariable=config['name'], width=10)
+            name_entry.grid(row=0, column=0, padx=1, sticky="w")
+            
+            # Year 1-4 spinboxes with trace for updating total
+            for year_idx in range(4):
+                spinbox = ttk.Spinbox(row_frame, from_=0, to=10, textvariable=config['blocks'][year_idx], width=4)
+                spinbox.grid(row=0, column=year_idx+1, padx=1)
+                # Add trace to update total when value changes
+                config['blocks'][year_idx].trace_add('write', lambda *args: self._update_total_blocks())
+        
+        self.toggle_block_inputs()
+        self._update_total_blocks()
+
+    def _update_total_blocks(self):
+        """Update the total blocks label."""
+        try:
+            total = sum(b.get() for config in self.program_configs for b in config['blocks'])
+            self.total_blocks_var.set(f"Total: {total} blocks")
+        except:
+            pass
+
+    def _add_program(self):
+        """Add a new program configuration."""
+        new_program = {
+            'name': tk.StringVar(value=f'P{len(self.program_configs)+1}'),
+            'blocks': [tk.IntVar(value=2), tk.IntVar(value=2), tk.IntVar(value=2), tk.IntVar(value=2)]
+        }
+        self.program_configs.append(new_program)
+        self._rebuild_program_rows()
+
+    def _remove_program(self):
+        """Remove the last program configuration."""
+        if len(self.program_configs) > 1:
+            self.program_configs.pop()
+            self._rebuild_program_rows()
+
+    def toggle_block_inputs(self):
+        """Enable/disable all enrollment config widgets."""
+        state = 'normal' if self.override_blocks.get() else 'disabled'
+        
+        def set_state_recursive(widget):
+            try:
+                widget.configure(state=state)
+            except tk.TclError:
+                pass
+            for child in widget.winfo_children():
+                set_state_recursive(child)
+        
+        set_state_recursive(self.block_input_frame)
+
+    def get_effective_enrollment_file(self):
+        """Generate a temporary enrollment file based on program configs."""
+        if not self.override_blocks.get():
+            return self.enrollment_file.get()
+        
+        enrollment_data = []
+        total_blocks = 0
+        
+        for config in self.program_configs:
+            program_name = config['name'].get()
+            for year_idx, blocks_var in enumerate(config['blocks']):
+                num_blocks = blocks_var.get()
+                year = year_idx + 1
+                for block_num in range(num_blocks):
+                    block_letter = chr(ord('A') + block_num)  # A, B, C, D, ...
+                    enrollment_data.append({
+                        'program': program_name,
+                        'year': year,
+                        'block': block_letter,
+                        'students': 40  # Default 40 students per block
+                    })
+                    total_blocks += 1
+        
+        df = pd.DataFrame(enrollment_data)
+        temp_file = "temp_enrollment_simulation.csv"
+        df.to_csv(temp_file, index=False)
+        
+        # Build summary string
+        summary_parts = []
+        for config in self.program_configs:
+            prog_name = config['name'].get()
+            prog_blocks = [b.get() for b in config['blocks']]
+            summary_parts.append(f"{prog_name}:{'+'.join(map(str, prog_blocks))}")
+        
+        self.print_log(f"Generated temp enrollment: {total_blocks} blocks ({', '.join(summary_parts)}).", "warning")
+        return temp_file
+
     def print_log(self, message, tag="stdout"):
         self.log_text.configure(state="normal")
         self.log_text.insert("end", message + "\n", (tag,))
@@ -368,7 +535,7 @@ class SchedulerGUI:
 
         try:
             courses_path = self.courses_file.get()
-            enrollment_path = self.enrollment_file.get()
+            enrollment_path = self.get_effective_enrollment_file()
             rooms_path = self.get_effective_rooms_file()
             
             if not os.path.exists(rooms_path):
@@ -510,7 +677,7 @@ class SchedulerGUI:
     def run_simulation(self):
         try:
             courses_path = self.courses_file.get()
-            enrollment_path = self.enrollment_file.get()
+            enrollment_path = self.get_effective_enrollment_file()
             rooms_path = self.get_effective_rooms_file()
             semester = self.semester_var.get()
             time_limit = self.time_limit_var.get()
@@ -521,14 +688,26 @@ class SchedulerGUI:
             # Generate descriptive output folder name
             # Format: Output_Sem{semester}_{solver}_{strategy_short}_{timelimit}s_{gap}pct_{timestamp}
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            strategy_short = "Seq" if "Sequential" in strategy else "Global"
-            if solver_name == "OR_TOOLS_CP_SAT":
-                strategy_short = "CPSAT"  # OR-Tools is always global
+            if "Year-by-Year" in strategy:
+                strategy_short = "SeqYear"
+            elif "Program-by-Program" in strategy:
+                strategy_short = "SeqProg"
+            else:
+                strategy_short = "Global"
+            if solver_name == "OR_TOOLS_CP_SAT" and strategy_short == "Global":
+                strategy_short = "CPSAT"  # OR-Tools global
             gap_pct = int(self.gap_tolerance_var.get())
             
             # Get dataset name from enrollment file
-            enrollment_name = os.path.basename(enrollment_path).replace(".csv", "").replace("enrollment_", "")
-            if not enrollment_name:
+            base_enrollment = self.enrollment_file.get()
+            enrollment_name = os.path.basename(base_enrollment).replace(".csv", "").replace("enrollment_", "")
+            if self.override_blocks.get():
+                total_blocks = sum(
+                    b.get() for config in self.program_configs for b in config['blocks']
+                )
+                num_programs = len(self.program_configs)
+                enrollment_name = f"sim_{num_programs}prog_{total_blocks}blocks"
+            elif not enrollment_name:
                 enrollment_name = "custom"
             
             output_dir = f"Output_Sem{semester}_{enrollment_name}_{solver_name}_{strategy_short}_{time_limit}s_{gap_pct}pct_{timestamp}"
@@ -539,88 +718,103 @@ class SchedulerGUI:
             self.print_log(f"Strategy: {strategy}")
             self.print_log(f"Solver: {solver_name} | Time Limit: {time_limit}s | Gap Tolerance: {gap_tolerance:.1%}")
             
-            # --- OR-Tools CP-SAT Solver ---
-            if solver_name == "OR_TOOLS_CP_SAT":
-                self.print_log("Running OR-Tools CP-SAT solver (global, fast)...")
-                ort_scheduler = OrToolsScheduler(
-                    courses_file=courses_path,
-                    enrollment_file=enrollment_path,
-                    rooms_file=rooms_path,
-                    semester=semester,
-                )
-                self.print_log("Building CP-SAT model...")
-                ort_scheduler.build_model()
+            # --- Strategy dispatch (2 strategies × 3 solvers = 6 combinations) ---
+            if strategy == "Sequential (Program-by-Program)":
+                # Program-by-Program Sequential Strategy with selected solver
+                from scheduler_pbp import solve_pbp
                 
-                self.print_log(f"Solving CP-SAT model (max {time_limit}s)...")
-                solver, status = ort_scheduler.solve(time_limit=time_limit)
+                self.print_log(f"Running Program-by-Program sequential optimization...")
+                self.print_log(f"(Solves larger programs first, reserves slots for smaller programs)")
+                self.print_log(f"Solver backend: {solver_name}")
                 
-                if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-                    self.print_log("✓ Optimal/Feasible solution found!")
-                    df = ort_scheduler.extract_schedule(solver)
-                    
-                    # Export in same format as PuLP scheduler
-                    if semester == 1:
-                        folder_name = "1st_Sem_Schedule"
-                    elif semester == 2:
-                        folder_name = "2nd_Sem_Schedule"
-                    else:
-                        folder_name = "Generated_Schedules"
-                    
-                    final_output_dir = os.path.join(output_dir, folder_name)
-                    os.makedirs(final_output_dir, exist_ok=True)
-                    
-                    # Per Program-Year-Block files
-                    if "Program-Year-Block" in df.columns:
-                        for group in sorted(df["Program-Year-Block"].dropna().unique()):
-                            group_df = df[df["Program-Year-Block"] == group]
-                            filename = os.path.join(final_output_dir, f"schedule_{group}.csv")
-                            group_df.to_csv(filename, index=False)
-                            self.print_log(f"  Schedule for {group} exported.")
-                    
-                    # Combined file
-                    combined_filename = os.path.join(final_output_dir, "_schedule_ALL.csv")
-                    df.to_csv(combined_filename, index=False)
-                    self.print_log(f"  Combined schedule exported to {combined_filename}")
-                else:
-                    self.print_log("❌ No feasible solution found by OR-Tools.", "stderr")
-
-            # --- PuLP-based Solvers ---
-            elif strategy == "Global (All-at-Once)":
-                self.print_log("Running global optimization (this may take a while)...")
-                optimizer = SchedulingOptimizer(
-                    courses_file=courses_path,
-                    enrollment_file=enrollment_path,
-                    rooms_file=rooms_path
-                )
-                self.print_log("Building full model...")
-                optimizer.build_model(semester=semester)
-                
-                self.print_log(f"Solving full model (max {time_limit}s)...")
-                status = optimizer.solve(time_limit=time_limit, gap_tolerance=gap_tolerance, solver_name=solver_name)
-                
-                if status == pl.LpStatusOptimal or pl.value(optimizer.model.objective) > 0:
-                     self.print_log("✓ Optimal/Feasible solution found!")
-                     optimizer.export_all_schedules(output_dir=output_dir)
-                else:
-                     self.print_log("❌ No feasible solution found in time limit.", "stderr")
-
-            else:
-                # Sequential Strategy - pass stop check callback
-                all_solutions = solve_large_dataset(
+                success, stats = solve_pbp(
                     courses_file=courses_path,
                     enrollment_file=enrollment_path,
                     rooms_file=rooms_path,
                     semester=semester,
                     output_dir=output_dir,
                     time_limit=time_limit,
-                    gap_tolerance=gap_tolerance,
-                    solver=solver_name,
-                    stop_check=lambda: self.simulation_stopped
+                    solver=solver_name,  # Pass selected solver to PBP
+                    callback=lambda msg: self.print_log(msg)
                 )
                 
-                if self.simulation_stopped:
-                    self.print_log(f"\n⚠️ Simulation stopped by user.", "warning")
+                if not success:
+                    self.print_log(f"❌ Program-by-Program scheduling failed: {stats.get('error', 'Unknown error')}", "stderr")
                     return
+                
+                self.print_log(f"\nTotal solve time: {stats.get('total_time', 0):.1f}s")
+                for prog, prog_stats in stats.get('programs', {}).items():
+                    self.print_log(f"  {prog}: {prog_stats['solve_time']:.1f}s ({prog_stats['status']})")
+                
+                if 'utilization' in stats:
+                    util = stats['utilization']
+                    self.print_log(f"\nFinal Resource Utilization:")
+                    self.print_log(f"  Labs:     {util['lab_slots']} ({util['lab']:.1f}%)")
+                    self.print_log(f"  Lectures: {util['lecture_slots']} ({util['lecture']:.1f}%)")
+
+            elif strategy == "Global (All-at-Once)":
+                # Global strategy: choose backend based on solver
+                if solver_name == "OR_TOOLS_CP_SAT":
+                    self.print_log("Running OR-Tools CP-SAT solver (global, fast)...")
+                    ort_scheduler = OrToolsScheduler(
+                        courses_file=courses_path,
+                        enrollment_file=enrollment_path,
+                        rooms_file=rooms_path,
+                        semester=semester,
+                    )
+                    self.print_log("Building CP-SAT model...")
+                    ort_scheduler.build_model()
+                    
+                    self.print_log(f"Solving CP-SAT model (max {time_limit}s)...")
+                    solver, status = ort_scheduler.solve(time_limit=time_limit)
+                    
+                    if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+                        self.print_log("✓ Optimal/Feasible solution found!")
+                        df = ort_scheduler.extract_schedule(solver)
+                        
+                        # Export in same format as PuLP scheduler
+                        if semester == 1:
+                            folder_name = "1st_Sem_Schedule"
+                        elif semester == 2:
+                            folder_name = "2nd_Sem_Schedule"
+                        else:
+                            folder_name = "Generated_Schedules"
+                        
+                        final_output_dir = os.path.join(output_dir, folder_name)
+                        os.makedirs(final_output_dir, exist_ok=True)
+                        
+                        # Per Program-Year-Block files
+                        if "Program-Year-Block" in df.columns:
+                            for group in sorted(df["Program-Year-Block"].dropna().unique()):
+                                group_df = df[df["Program-Year-Block"] == group]
+                                filename = os.path.join(final_output_dir, f"schedule_{group}.csv")
+                                group_df.to_csv(filename, index=False)
+                                self.print_log(f"  Schedule for {group} exported.")
+                        
+                        # Combined file
+                        combined_filename = os.path.join(final_output_dir, "_schedule_ALL.csv")
+                        df.to_csv(combined_filename, index=False)
+                        self.print_log(f"  Combined schedule exported to {combined_filename}")
+                    else:
+                        self.print_log("❌ No feasible schedule found by OR-Tools.", "stderr")
+                else:
+                    self.print_log("Running global optimization (this may take a while)...")
+                    optimizer = SchedulingOptimizer(
+                        courses_file=courses_path,
+                        enrollment_file=enrollment_path,
+                        rooms_file=rooms_path
+                    )
+                    self.print_log("Building full model...")
+                    optimizer.build_model(semester=semester)
+                    
+                    self.print_log(f"Solving full model (max {time_limit}s)...")
+                    status = optimizer.solve(time_limit=time_limit, gap_tolerance=gap_tolerance, solver_name=solver_name)
+                    
+                    if status == pl.LpStatusOptimal or pl.value(optimizer.model.objective) > 0:
+                         self.print_log("✓ Optimal/Feasible solution found!")
+                         optimizer.export_all_schedules(output_dir=output_dir)
+                    else:
+                         self.print_log("❌ No feasible solution found in time limit.", "stderr")
             
             self.print_log(f"\n✅ Simulation Complete!", "success")
             self.load_results_from_folder(output_dir)
@@ -680,20 +874,50 @@ class SchedulerGUI:
                     for _, row in df.iterrows():
                         # Prefer Program-Year-Block from the file (e.g., OR-Tools combined output)
                         row_block = row.get('Program-Year-Block', program_year_block)
-                        self.schedules_data.append({
-                            'Course Code': row.get('Course Code', ''),
-                            'Course Title': row.get('Course Title', ''),
-                            'Time': row.get('Time', ''),
-                            'Days': row.get('Days', ''),
-                            'Room': row.get('Room', ''),
-                            'Lec': row.get('Lec', 0),
-                            'Lab': row.get('Lab', 0),
-                            'Units': row.get('Units', 0),
-                            'No. of Hours': row.get('No. of Hours', 0),
-                            'ETL Units': row.get('ETL Units', 0),
-                            'Instructor/Professor': row.get('Instructor/Professor', 'TBA'),
-                            'Program-Year-Block': row_block
-                        })
+                        
+                        # Handle different output formats (sequential vs legacy)
+                        # Sequential format: Course, Component, Day, Start, End, Room
+                        # Legacy format: Course Code, Course Title, Time, Days, Room
+                        if 'Course' in df.columns and 'Start' in df.columns:
+                            # Sequential scheduler format
+                            course_code = row.get('Course', '')
+                            start_time = row.get('Start', '')
+                            end_time = row.get('End', '')
+                            time_str = f"{start_time}-{end_time}" if start_time else ''
+                            day = row.get('Day', '')
+                            component = row.get('Component', '')
+                            # Determine if lab or lecture from component name
+                            is_lab = '_LAB_' in str(component)
+                            self.schedules_data.append({
+                                'Course Code': course_code,
+                                'Course Title': component,
+                                'Time': time_str,
+                                'Days': day,
+                                'Room': row.get('Room', ''),
+                                'Lec': 0 if is_lab else 1,
+                                'Lab': 1 if is_lab else 0,
+                                'Units': 0,
+                                'No. of Hours': 0,
+                                'ETL Units': 0,
+                                'Instructor/Professor': row.get('Instructor', 'TBA'),
+                                'Program-Year-Block': row_block
+                            })
+                        else:
+                            # Legacy format
+                            self.schedules_data.append({
+                                'Course Code': row.get('Course Code', ''),
+                                'Course Title': row.get('Course Title', ''),
+                                'Time': row.get('Time', ''),
+                                'Days': row.get('Days', ''),
+                                'Room': row.get('Room', ''),
+                                'Lec': row.get('Lec', 0),
+                                'Lab': row.get('Lab', 0),
+                                'Units': row.get('Units', 0),
+                                'No. of Hours': row.get('No. of Hours', 0),
+                                'ETL Units': row.get('ETL Units', 0),
+                                'Instructor/Professor': row.get('Instructor/Professor', 'TBA'),
+                                'Program-Year-Block': row_block
+                            })
                 except Exception as e:
                     self.print_log(f"Error loading {f}: {e}", "stderr")
 
